@@ -2,36 +2,75 @@
 namespace App\Policies;
 
 use App\Models\User;
-use App\Models\Menu;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class RestaurantOwnerPolicy
 {
     use HandlesAuthorization;
 
-    public function viewMenu(User $user)
+    /**
+     * Determine whether the user can manage menus.
+     *
+     * @param  \App\Models\User  $user
+     * @return bool
+     */
+    public function ViewManageMenus(User $user)
     {
-        // Restaurant owners can view the menu
         return $user->hasRole('restaurant_owner');
     }
 
-    public function createMenu(User $user)
+    /**
+     * Determine whether the user can view the restaurant information.
+     *
+     * @param  \App\Models\User  $user
+     * @return bool
+     */
+    public function viewRestaurantInfo(User $user)
     {
-        // Restaurant owners can create new menu items
         return $user->hasRole('restaurant_owner');
     }
 
-    public function updateMenu(User $user, Menu $menu)
+    /**
+     * Determine whether the user can update the restaurant information.
+     *
+     * @param  \App\Models\User  $user
+     * @return bool
+     */
+    public function updateRestaurantInfo(User $user)
     {
-        // Restaurant owners can update their own menu items
-        return $user->hasRole('restaurant_owner') && $menu->restaurant_id == $user->id;
+        return $user->hasRole('restaurant_owner');
     }
 
-    public function deleteMenu(User $user, Menu $menu)
+    /**
+     * Determine whether the user can add new items to the menu.
+     *
+     * @param  \App\Models\User  $user
+     * @return bool
+     */
+    public function addItemToMenu(User $user)
     {
-        // Restaurant owners can delete their own menu items
-        return $user->hasRole('restaurant_owner') && $menu->restaurant_id == $user->id;
+        return $user->hasRole('restaurant_owner');
     }
 
-    // Add more authorization methods as needed
+    /**
+     * Determine whether the user can edit items on the menu.
+     *
+     * @param  \App\Models\User  $user
+     * @return bool
+     */
+    public function editMenuItem(User $user)
+    {
+        return $user->hasRole('restaurant_owner');
+    }
+
+    /**
+     * Determine whether the user can delete items from the menu.
+     *
+     * @param  \App\Models\User  $user
+     * @return bool
+     */
+    public function deleteMenuItem(User $user)
+    {
+        return $user->hasRole('restaurant_owner');
+    }
 }

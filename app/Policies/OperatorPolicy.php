@@ -4,19 +4,68 @@
 namespace App\Policies;
 
 use App\Models\User;
-use App\Models\Menu;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class OperatorPolicy
 {
     use HandlesAuthorization;
 
-    public function manageMenu(User $user, Menu $menu)
+
+    /**
+     * Determine whether the user can view the menu item.
+     *
+     * @param  \App\Models\User  $user
+     * @return bool
+     */
+    public function viewMenuItem(User $user)
     {
-        // Operators can manage menu items assigned to their restaurant
-        return $user->hasRole('operator') && $menu->restaurant_id == $user->restaurant_id;
+        return $user->hasRole('operator');
     }
 
-    // Add more authorization methods as needed
+    /**
+     * Determine whether the user can create menu items.
+     *
+     * @param  \App\Models\User  $user
+     * @return bool
+     */
+    public function viewRestaurantInfo(User $user)
+    {
+        return $user->hasRole('operator');
+    }
+
+    /**
+     * Determine whether the user can edit the menu item.
+     *
+     * @param  \App\Models\User  $user
+     * @return bool
+     */
+
+    public function createMenuItem(User $user)
+    {
+        return $user->hasRole('operator');
+    }
+
+    /**
+     * Determine whether the user can edit the menu item.
+     *
+     * @param  \App\Models\User  $user
+     * @return bool
+     */
+    public function editMenuItem(User $user)
+    {
+        return $user->hasRole('operator');
+    }
+
+    /**
+     * Determine whether the user can delete the menu item.
+     *
+     * @param  \App\Models\User  $user
+     * @return bool
+     */
+    public function deleteMenuItem(User $user)
+    {
+        return $user->hasRole('operator');
+    }
 }
+
 

@@ -11,29 +11,26 @@
                 </div>
 
                 <!-- Admin Links -->
-                @can('manageRestaurantOwners')
+                @role('admin')
                     <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                        <x-nav-link :href="route('admin.restaurant_owners.index')" :active="request()->routeIs('admin.restaurant_owners.index')">
-                            {{ __('Manage Restaurant Owners') }}
+                        <x-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.index')">
+                            {{ __('Manage Users') }}
                         </x-nav-link>
                     </div>
-                @endcan
 
-                @can('manageOperators')
                     <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                         <x-nav-link :href="route('admin.operators.index')" :active="request()->routeIs('admin.operators.index')">
                             {{ __('Manage Operators') }}
                         </x-nav-link>
                     </div>
-                @endcan
 
-                @can('manageSubscribers')
                     <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                         <x-nav-link :href="route('admin.subscribers.index')" :active="request()->routeIs('admin.subscribers.index')">
                             {{ __('Manage Subscribers') }}
                         </x-nav-link>
                     </div>
-                @endcan
+                @endrole
+
             </div>
 
             <!-- Settings Dropdown -->

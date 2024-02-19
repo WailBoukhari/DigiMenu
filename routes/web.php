@@ -33,10 +33,15 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::group(['middleware' => 'auth'], function () {
-    Route::get('/admin/restaurant-owners', [AdminController::class, 'manageRestaurantOwners']);
-    Route::get('/admin/operators', [AdminController::class, 'manageOperators']);
-    Route::get('/admin/subscribers', [AdminController::class, 'manageSubscribers']);
+    Route::get('/admin/users', [AdminController::class, 'manageUsers'])->name('admin.users.index');
+    Route::get('/admin/operators', [AdminController::class, 'manageOperators'])->name('admin.operators.index');
+    Route::get('/admin/subscribers', [AdminController::class, 'manageSubscribers'])->name('admin.subscribers.index');
+    Route::get('/admin/users/create', [AdminController::class, 'createUserForm'])->name('admin.users.create');
+    Route::post('/admin/users', [AdminController::class, 'createUser'])->name('admin.users.store');
+    Route::get('/admin/users/{user}/edit', [AdminController::class, 'editUserForm'])->name('admin.users.edit');
+    Route::put('/admin/users/{user}', [AdminController::class, 'editUser'])->name('admin.users.update');
 });
+
 
 // social login routes
 Route::get('/auth/google', [AuthenticatedSessionController::class, 'redirectToGoogle'])->name('auth.google');
