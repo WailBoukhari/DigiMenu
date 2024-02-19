@@ -2,6 +2,11 @@
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
+    <div class="flex justify-center items-center space-x-4 mb-4">        
+        <!-- Google Login Button -->
+        <a href="{{ route('auth.google') }}" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition duration-300">Login with Google</a>
+    </div>
+
     <form method="POST" action="{{ route('login') }}">
         @csrf
 
