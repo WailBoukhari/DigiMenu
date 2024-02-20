@@ -10,7 +10,7 @@
             <div class="bg-white dark:bg-gray-700 overflow-hidden shadow-xl sm:rounded-lg">
                 <div class="p-6 sm:px-20 bg-white dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
                     <div class="text-2xl dark:text-white">
-                        Users without a role
+                        Users
                     </div>
                 </div>
                 <div class="p-6 sm:px-20 bg-white dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
