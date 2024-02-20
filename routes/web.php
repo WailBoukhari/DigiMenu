@@ -40,6 +40,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/admin/users', [AdminController::class, 'createUser'])->name('admin.users.store');
     Route::get('/admin/users/{user}/edit', [AdminController::class, 'editUserForm'])->name('admin.users.edit');
     Route::put('/admin/users/{user}', [AdminController::class, 'editUser'])->name('admin.users.update');
+    Route::post('/remove-operator-role/{id}', [AdminController::class, 'removeOperatorRole'])->name('remove.operator.role');
+    Route::post('/make-operator/{user}', [AdminController::class, 'makeOperator'])->name('make.operator');
+
 });
 
 

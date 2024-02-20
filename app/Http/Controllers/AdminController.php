@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Restaurant;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
@@ -13,11 +14,32 @@ class AdminController extends Controller
     {
         $this->authorize('viewManageUsers', User::class);
 
+        // Fetch users who do not have the operator role assigned
+        $operators = User::role('operator')->get();
+
         // Fetch users who do not have any roles assigned
         $users = User::doesntHave('roles')->get();
-        return view('admin.users.index', compact('users'));
+
+        // Fetch all restaurants for the dropdown menu
+        $restaurants = Restaurant::all();
+
+        return view('admin.users.index', compact('operators', 'users', 'restaurants'));
     }
 
+    public function makeOperator(Request $request, $userId)
+    {
+        $user = User::findOrFail($userId);
+
+        // Add the operator role to the user
+        $user->assignRole('operator');
+
+        // Associate the user with the selected restaurant
+        $restaurantId = $request->input('restaurant_id');
+        $restaurant = Restaurant::findOrFail($restaurantId);
+        $user->restaurants()->sync([$restaurantId]);
+
+        return redirect()->back()->with('success', 'User has been assigned as an operator.');
+    }
     public function manageOperators()
     {
         $this->authorize('viewManageOperators', User::class);
@@ -43,7 +65,6 @@ class AdminController extends Controller
     // Method to handle user creation
     public function createUser(Request $request)
     {
-        // Validate request data
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
@@ -51,27 +72,22 @@ class AdminController extends Controller
             'role' => 'required|exists:roles,name',
         ]);
 
-        // Create the user
         $user = User::create([
             'name' => $validatedData['name'],
             'email' => $validatedData['email'],
             'password' => bcrypt($validatedData['password']),
         ]);
 
-        // Assign role to the user
         $user->assignRole($validatedData['role']);
 
-        // Redirect to a success page or return a response
     }
 
-    // Method to display the user editing form
     public function editUserForm(User $user)
     {
         $roles = Role::all();
         return view('admin.users.edit', compact('user', 'roles'));
     }
 
-    // Method to handle user editing
     public function editUser(Request $request, User $user)
     {
         // Validate request data
@@ -81,15 +97,20 @@ class AdminController extends Controller
             'role' => 'required|exists:roles,name',
         ]);
 
-        // Update the user details
         $user->update([
             'name' => $validatedData['name'],
             'email' => $validatedData['email'],
         ]);
 
-        // Sync user roles
         $user->syncRoles([$validatedData['role']]);
+    }
 
-        // Redirect to a success page or return a response
+    public function removeOperatorRole($id)
+    {
+        $user = User::findOrFail($id);
+
+        $user->removeRole('operator');
+
+        return redirect()->back()->with('success', 'Operator role removed successfully.');
     }
 }

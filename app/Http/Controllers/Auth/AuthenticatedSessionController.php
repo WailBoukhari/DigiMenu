@@ -50,6 +50,7 @@ class AuthenticatedSessionController extends Controller
     }
     public function redirectToGoogle()
     {
+        
         return Socialite::driver('google')->redirect();
     }
 
@@ -66,6 +67,7 @@ class AuthenticatedSessionController extends Controller
 
         if ($existingUser) {
             Auth::login($existingUser);
+           
         } else {
             $newUser = new User();
             $newUser->name = $googleUser->getName();
