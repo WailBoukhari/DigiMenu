@@ -11,11 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('subscriptions', function (Blueprint $table) {
+        Schema::create('subscription_plans', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('restaurant_id');
-            $table->foreign('restaurant_id')->references('id')->on('restaurants')->onDelete('cascade');
-            // Add subscription fields such as plan type, expiration date, etc.
+            $table->string('name');
+            $table->text('description');
+            $table->decimal('price', 8, 2);
+            $table->integer('create_limit')->nullable();
+            $table->integer('scan_limit')->nullable();
+            $table->integer('dish_creation_limit')->nullable();
             $table->timestamps();
         });
     }
@@ -25,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('subscriptions');
+        Schema::dropIfExists('subscription_plans');
     }
 };

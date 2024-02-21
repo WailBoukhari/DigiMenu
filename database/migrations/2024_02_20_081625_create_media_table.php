@@ -16,7 +16,6 @@ return new class extends Migration
             $table->unsignedBigInteger('menu_item_id');
             $table->foreign('menu_item_id')->references('id')->on('menu_items')->onDelete('cascade');
             $table->string('file_path');
-            // Add other media fields as needed
             $table->timestamps();
         });
     }

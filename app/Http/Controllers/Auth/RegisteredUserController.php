@@ -56,6 +56,7 @@ class RegisteredUserController extends Controller
         // Log in the user
         Auth::login($user);
 
-        return redirect(RouteServiceProvider::HOME);
+        return redirect()->route('subscription.form');
+
     }
 }

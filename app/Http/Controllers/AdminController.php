@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Restaurant;
+use App\Models\SubscriptionPlan;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
@@ -54,6 +55,16 @@ class AdminController extends Controller
 
         // $subscribers = User::role('subscriber')->get();
         return view('admin.subscribers.index');
+    }
+    public function manageRestaurantOwners()
+    {
+        // Retrieve all users with the role of "restaurant_owner" along with their subscription plans
+        $restaurantOwners = User::role('restaurant_owner')->with('subscriptionPlan')->get();
+        // $plans = SubscriptionPlan::all();
+        // dd($plans);
+
+        // Pass data to the Blade view
+        return view('admin.restaurant_owners.index', ['restaurantOwners' => $restaurantOwners]);
     }
     // Method to display the user creation form
     public function createUserForm()

@@ -13,10 +13,13 @@ return new class extends Migration
     {
         Schema::create('menu_items', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('menu_id');
-            $table->foreign('menu_id')->references('id')->on('menus')->onDelete('cascade');
-            // Add other menu item fields as needed
+            $table->foreignId('menu_id')->constrained()->onDelete('cascade');
+            $table->string('name');
+            $table->text('description')->nullable();
+            $table->decimal('price', 8, 2);
             $table->timestamps();
+            $table->softDeletes();
+
         });
     }
 
