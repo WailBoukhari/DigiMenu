@@ -4,7 +4,7 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
                     <h1 class="text-2xl mb-4">Edit Menu Item</h1>
-                    <form action="{{ route('menu-items.update', $menuItem->id) }}" method="POST">
+                    <form action="{{ route('restaurant.menu.update', $menuItem) }}" method="POST">
                         @csrf
                         @method('PUT')
                         <div class="mb-4">

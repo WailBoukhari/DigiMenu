@@ -11,21 +11,6 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-700 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6">
-                    @php
-                        // Retrieve the logged-in user
-                        $user = auth()->user();
-                        
-                        // Check if the user has a subscription and if it has ended
-                        $hasSubscription = $user->subscriptionPlan;
-                        $subscriptionExpired = $user->subscription_expires_at && now() > $user->subscription_expires_at;
-                        
-                        // Calculate remaining time if subscription exists
-                        $remainingTime = null;
-                        if ($hasSubscription && !$subscriptionExpired) {
-                            $remainingTime = now()->diff($user->subscription_expires_at)->format('%d days %h hours %i minutes');
-                        }
-                    @endphp
-
                     @if ($hasSubscription)
                         <div>
                             <h2 class="text-lg font-semibold mb-2">Subscription Details:</h2>

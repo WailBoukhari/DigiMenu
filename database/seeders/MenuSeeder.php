@@ -15,12 +15,13 @@ class MenuSeeder extends Seeder
      */
     public function run()
     {
-        $users = User::all();
+        $userIds = User::pluck('id')->toArray(); // Get all user ids
 
-        // Create a menu for each user
-        $users->each(function ($user) {
-            $menu = Menu::factory()->create(['user_id' => $user->id]);
-            MenuItem::factory()->count(10)->create(['menu_id' => $menu->id]);
-        });
+        foreach ($userIds as $userId) {
+            Menu::factory()->count(3)->create(['user_id' => $userId])
+                ->each(function ($menu) {
+                    MenuItem::factory()->count(10)->create(['menu_id' => $menu->id]);
+                });
+        }
     }
 }

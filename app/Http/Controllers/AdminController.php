@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Restaurant;
-use App\Models\SubscriptionPlan;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
@@ -13,15 +12,10 @@ class AdminController extends Controller
 {
     public function manageUsers()
     {
-        $this->authorize('viewManageUsers', User::class);
+        $this->authorize('manageUsers', User::class);
 
-        // Fetch users who do not have the operator role assigned
         $operators = User::role('operator')->get();
-
-        // Fetch users who do not have any roles assigned
         $users = User::doesntHave('roles')->get();
-
-        // Fetch all restaurants for the dropdown menu
         $restaurants = Restaurant::all();
 
         return view('admin.users.index', compact('operators', 'users', 'restaurants'));
@@ -29,21 +23,21 @@ class AdminController extends Controller
 
     public function makeOperator(Request $request, $userId)
     {
-        $user = User::findOrFail($userId);
+        $this->authorize('makeOperator', User::class);
 
-        // Add the operator role to the user
+        $user = User::findOrFail($userId);
         $user->assignRole('operator');
 
-        // Associate the user with the selected restaurant
         $restaurantId = $request->input('restaurant_id');
         $restaurant = Restaurant::findOrFail($restaurantId);
         $user->restaurants()->sync([$restaurantId]);
 
         return redirect()->back()->with('success', 'User has been assigned as an operator.');
     }
+
     public function manageOperators()
     {
-        $this->authorize('viewManageOperators', User::class);
+        $this->authorize('manageOperators', User::class);
 
         $operators = User::role('operator')->get();
         return view('admin.operators.index', compact('operators'));
@@ -51,77 +45,53 @@ class AdminController extends Controller
 
     public function manageSubscribers()
     {
-        $this->authorize('viewManageSubscribers', User::class);
+        $this->authorize('manageSubscribers', User::class);
 
-        // $subscribers = User::role('subscriber')->get();
         return view('admin.subscribers.index');
     }
+
     public function manageRestaurantOwners()
     {
-        // Retrieve all users with the role of "restaurant_owner" along with their subscription plans
-        $restaurantOwners = User::role('restaurant_owner')->with('subscriptionPlan')->get();
-        // $plans = SubscriptionPlan::all();
-        // dd($plans);
+        $this->authorize('manageRestaurantOwners', User::class);
 
-        // Pass data to the Blade view
+        $restaurantOwners = User::role('restaurant_owner')->with('subscriptionPlan')->get();
         return view('admin.restaurant_owners.index', ['restaurantOwners' => $restaurantOwners]);
     }
-    // Method to display the user creation form
+
     public function createUserForm()
     {
+        $this->authorize('createUser', User::class);
+
         $roles = Role::all();
         return view('admin.users.create', compact('roles'));
     }
 
-    // Method to handle user creation
     public function createUser(Request $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:6',
-            'role' => 'required|exists:roles,name',
-        ]);
+        $this->authorize('createUser', User::class);
 
-        $user = User::create([
-            'name' => $validatedData['name'],
-            'email' => $validatedData['email'],
-            'password' => bcrypt($validatedData['password']),
-        ]);
-
-        $user->assignRole($validatedData['role']);
-
+        // Logic to create a new user
     }
 
     public function editUserForm(User $user)
     {
+        $this->authorize('editUser', $user);
+
         $roles = Role::all();
         return view('admin.users.edit', compact('user', 'roles'));
     }
 
     public function editUser(Request $request, User $user)
     {
-        // Validate request data
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-            'role' => 'required|exists:roles,name',
-        ]);
+        $this->authorize('editUser', $user);
 
-        $user->update([
-            'name' => $validatedData['name'],
-            'email' => $validatedData['email'],
-        ]);
-
-        $user->syncRoles([$validatedData['role']]);
+        // Logic to update user information
     }
 
     public function removeOperatorRole($id)
     {
-        $user = User::findOrFail($id);
+        $this->authorize('removeOperatorRole', User::class);
 
-        $user->removeRole('operator');
-
-        return redirect()->back()->with('success', 'Operator role removed successfully.');
+        // Logic to remove operator role
     }
 }

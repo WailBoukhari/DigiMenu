@@ -13,17 +13,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->call(function () {
-            // Find users whose subscriptions have expired
-            $expiredUsers = User::where('subscription_expires_at', '<=', now())->get();
+        $schedule->command('disable:User_base_on_sub_time_expired')->everySecond();
 
-            // Delete expired users and their associated data
-            foreach ($expiredUsers as $user) {
-                $user->delete();
-                $user->menus()->delete(); // Delete associated menus
-
-            }
-        })->everySecond(); // Run the task every minute
     }
     /**
      * Register the commands for the application.

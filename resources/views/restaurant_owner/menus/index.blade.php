@@ -1,17 +1,19 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Menu Items') }}
+            {{ __('User Menus') }}
         </h2>
     </x-slot>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             @if ($subscriptionExpired)
+                <!-- Subscription expired message -->
                 <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
                     role="alert">
                     <strong class="font-bold">Your subscription has expired!</strong>
                     <span class="block sm:inline">Please renew your subscription to continue.</span>
+                    <!-- Renewal button -->
                     <a href="{{ route('subscription.form') }}"
                         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-block mt-3">Renew
                         Subscription</a>
@@ -19,21 +21,17 @@
             @else
                 <div class="bg-white dark:bg-gray-700 overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6 bg-white dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
-                        <a href="{{ route('menu-items.create') }}"
-                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-3 inline-block">Add
-                            New Menu Item</a>
-
+                        <div class="flex justify-end mb-4">
+                            <!-- Add new menu button -->
+                            <a href="{{ route('restaurant.menus.create') }}"
+                                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Add New
+                                Menu</a>
+                        </div>
                         <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
                             <thead>
                                 <tr>
                                     <th class="px-6 py-3 bg-gray-50 dark:bg-gray-600 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                                        Name
-                                    </th>
-                                    <th class="px-6 py-3 bg-gray-50 dark:bg-gray-600 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                                        Description
-                                    </th>
-                                    <th class="px-6 py-3 bg-gray-50 dark:bg-gray-600 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                                        Price
+                                        Menu Name
                                     </th>
                                     <th class="px-6 py-3 bg-gray-50 dark:bg-gray-600 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                                         Actions
@@ -41,27 +39,22 @@
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-700 dark:divide-gray-600">
-                                @foreach ($menuItems as $menuItem)
+                                @foreach ($menus as $menu)
                                     <tr>
                                         <td class="px-6 py-4 whitespace-no-wrap">
-                                            {{ $menuItem->name }}
+                                            {{ $menu->name }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-no-wrap">
-                                            {{ $menuItem->description }}
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-no-wrap">
-                                            {{ $menuItem->price }}
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-no-wrap">
-                                            <a href="{{ route('menu-items.edit', $menuItem->id) }}"
-                                                class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</a>
-                                            <form action="{{ route('menu-items.destroy', $menuItem->id) }}"
-                                                method="POST" class="inline">
+                                            <!-- Edit menu button -->
+                                            <a href="{{ route('restaurant.menus.edit', $menu->id) }}"
+                                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2">Edit</a>
+                                            <!-- Delete menu button -->
+                                            <form action="{{ route('restaurant.menus.destroy', $menu->id) }}" method="POST"
+                                                class="inline">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit"
-                                                    onclick="return confirm('Are you sure you want to delete this item?')"
-                                                    class="text-red-600 hover:text-red-900">Delete</button>
+                                                    class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Delete</button>
                                             </form>
                                         </td>
                                     </tr>

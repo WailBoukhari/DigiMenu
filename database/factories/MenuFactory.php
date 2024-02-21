@@ -19,6 +19,7 @@ class MenuFactory extends Factory
     {
         return [
             'user_id' => User::role('restaurant_owner')->inRandomOrder()->first()->id,
+            'name' => $this->faker->word,
         ];
     }
 }

@@ -20,6 +20,7 @@ class MenuItemFactory extends Factory
         return [
             'menu_id' => Menu::factory(),
             'name' => $this->faker->word(),
+            'description' => $this->faker->sentence(),
             'price' => $this->faker->randomFloat(2, 5, 20),
         ];
     }

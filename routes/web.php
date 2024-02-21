@@ -2,11 +2,13 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\MenuController;
 use App\Http\Controllers\MenuItemController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RestaurantOwnerController;
 use App\Http\Controllers\SubscriptionController;
 use Illuminate\Support\Facades\Route;
+
 
 
 
@@ -49,15 +51,23 @@ Route::group(['middleware' => 'auth'], function () {
     Route::put('/admin/users/{user}', [AdminController::class, 'editUser'])->name('admin.users.update');
     Route::post('/remove-operator-role/{id}', [AdminController::class, 'removeOperatorRole'])->name('remove.operator.role');
     Route::post('/make-operator/{user}', [AdminController::class, 'makeOperator'])->name('make.operator');
-    Route::get('/restaurant/menu', [MenuItemController::class, 'index'])->name('menu-items.index');
-    Route::get('/restaurant/menu/create', [MenuItemController::class, 'create'])->name('menu-items.create');
-    Route::post('/restaurant/menu', [MenuItemController::class, 'store'])->name('menu-items.store');
-    Route::get('/restaurant/menu/{id}/edit', [MenuItemController::class, 'edit'])->name('menu-items.edit');
-    Route::put('/restaurant/menu/{id}', [MenuItemController::class, 'update'])->name('menu-items.update');
-    Route::delete('/restaurant/menu/{id}', [MenuItemController::class, 'destroy'])->name('menu-items.destroy');
-  
+    Route::get('/restaurant_owner/dashboard', [RestaurantOwnerController::class, 'dashboard'])->name('restaurant_owner.dashboard');
+
+    Route::get('/restaurant/menu', [RestaurantOwnerController::class, 'menuItemsIndex'])->name('restaurant.menu.index');
+    Route::get('/restaurant/menu/create', [RestaurantOwnerController::class, 'menuItemsCreate'])->name('restaurant.menu.create');
+    Route::post('/restaurant/menu', [RestaurantOwnerController::class, 'menuItemsStore'])->name('restaurant.menu.store');
+    Route::get('/restaurant/menu/{menuItem}/edit', [RestaurantOwnerController::class, 'menuItemsEdit'])->name('restaurant.menu.edit');
+    Route::put('/restaurant/menu/{menuItem}', [RestaurantOwnerController::class, 'menuItemsUpdate'])->name('restaurant.menu.update');
+    Route::delete('/restaurant/menu/{menuItem}', [RestaurantOwnerController::class, 'menuItemsDestroy'])->name('restaurant.menu.destroy');
+
+    Route::get('/restaurant_owner/menus', [RestaurantOwnerController::class, 'menusIndex'])->name('restaurant.menus.index');
+    Route::get('/menus/create', [RestaurantOwnerController::class, 'menusCreate'])->name('restaurant.menus.create');
+    Route::post('/menus', [RestaurantOwnerController::class, 'menusStore'])->name('restaurant.menus.store');
+    Route::get('/menus/{menu}/edit', [RestaurantOwnerController::class, 'menusEdit'])->name('restaurant.menus.edit');
+    Route::put('/menus/{menu}', [RestaurantOwnerController::class, 'menusUpdate'])->name('restaurant.menus.update');
+    Route::delete('/menus/{menu}', [RestaurantOwnerController::class, 'menusDestroy'])->name('restaurant.menus.destroy');
 });
-Route::get('/restaurant_owner/dashboard', [RestaurantOwnerController::class, 'dashboard'])->name('restaurant_owner.dashboard');
+
 
 // social login routes
 Route::get('/auth/google', [AuthenticatedSessionController::class, 'redirectToGoogle'])->name('auth.google');

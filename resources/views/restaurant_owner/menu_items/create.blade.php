@@ -4,7 +4,7 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
                     <h1 class="text-2xl mb-4">Add New Menu Item</h1>
-                    <form action="{{ route('menu-items.store') }}" method="POST">
+                    <form action="{{ route('restaurant.menu.store') }}" method="POST">
                         @csrf
                         <div class="mb-4">
                             <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Name</label>
@@ -21,6 +21,14 @@
                             <label for="price" class="block text-gray-700 text-sm font-bold mb-2">Price</label>
                             <input type="number" id="price" name="price"
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        </div>
+                        <div class="mb-4">
+                            <label for="menu" class="block text-gray-700 text-sm font-bold mb-2">Associated Menu</label>
+           <select id="menu" name="menu_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+    @foreach ($menus as $menu)
+        <option value="{{ $menu->id }}">{{ $menu->name }}</option>
+    @endforeach
+</select>
                         </div>
                         <button type="submit"
                             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Submit</button>
