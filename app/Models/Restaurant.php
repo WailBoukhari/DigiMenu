@@ -12,6 +12,10 @@ class Restaurant extends Model implements HasMedia
     protected $fillable = [
         'name',
         'address',
+        'contact_number',
+        'description',
+        'image',
+        'video',
     ];
     public function operators()
     {

@@ -1,5 +1,7 @@
 <?php
 
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+
 return [
 
     /*

@@ -178,7 +178,7 @@ class RestaurantOwnerController extends Controller
             'name' => 'required|string|max:255',
             'address' => 'required|string|max:255',
             'contact_number' => 'required|string|max:20',
-            'description' => 'nullable|string',
+            'description' => 'required|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'video' => 'nullable|file|mimes:mp4,avi,mov,wmv|max:20480',
         ]);
@@ -209,8 +209,18 @@ class RestaurantOwnerController extends Controller
 
     public function restaurantUpdate(Request $request, Restaurant $restaurant)
     {
+        // Validate the request data
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
+            'contact_number' => 'required|string|max:20',
+            'description' => 'nullable|string',
+            'image' => 'nullable|image|max:2048',
+            'video' => 'nullable|file|mimetypes:video/*',
+        ]);
+
         // Update the restaurant details
-        $restaurant->update($request->all());
+        $restaurant->update($validatedData);
 
         // Handle file uploads for images
         if ($request->hasFile('image')) {
@@ -226,6 +236,7 @@ class RestaurantOwnerController extends Controller
 
         return redirect()->route('restaurant.profile')->with('success', 'Restaurant updated successfully.');
     }
+
 
     public function restaurantDestroy(Restaurant $restaurant)
     {

@@ -67,9 +67,10 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/restaurant/profile', [RestaurantOwnerController::class, 'restaurantProfile'])->name('restaurant.profile');
     Route::get('/restaurant/profile/edit', [RestaurantOwnerController::class, 'restaurantEdit'])->name('restaurant.profile.edit');
-    Route::put('/restaurant/profile/update/{id}', [RestaurantOwnerController::class, 'restaurantUpdate'])->name('restaurant.profile.update');
+    Route::put('/restaurant/profile/update/{restaurant}', [RestaurantOwnerController::class, 'restaurantUpdate'])->name('restaurant.profile.update');
     Route::get('/restaurant/profile/create', [RestaurantOwnerController::class, 'restaurantCreate'])->name('restaurant.profile.create');
     Route::post('/restaurant/profile/store', [RestaurantOwnerController::class, 'restaurantStore'])->name('restaurant.profile.store');
+
 
 });
 
