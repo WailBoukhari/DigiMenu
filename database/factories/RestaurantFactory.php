@@ -31,9 +31,14 @@ class RestaurantFactory extends Factory
             $owner->assignRole('restaurant_owner');
         }
 
+
         return [
             'name' => $this->faker->company(),
             'address' => $this->faker->address(),
+            'contact_number' => $this->faker->phoneNumber(),
+            'description' => $this->faker->paragraph(),
+            'image' => null,
+            'media' => null,
             'owner_id' => $owner->id,
         ];
     }

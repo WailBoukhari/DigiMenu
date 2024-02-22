@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
-class Restaurant extends Model
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+class Restaurant extends Model implements HasMedia
 {
-    use HasFactory;
+    use HasFactory ,InteractsWithMedia;
     protected $fillable = [
         'name',
         'address',

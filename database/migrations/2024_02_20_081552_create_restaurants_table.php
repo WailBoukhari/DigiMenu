@@ -15,6 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('address');
+            $table->string('contact_number');
+            $table->text('description')->nullable();
+            $table->string('image')->nullable();
+            $table->json('media')->nullable();
             $table->foreignId('owner_id')->nullable()->constrained('users')->onDelete('set null');
             $table->timestamps();
         });

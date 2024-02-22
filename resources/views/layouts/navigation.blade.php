@@ -36,8 +36,7 @@
                     </div>
                 @endrole
                 @role('restaurant_owner')
-
-                                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                         <x-nav-link :href="route('restaurant_owner.dashboard')" :active="request()->routeIs('restaurant_owner.dashboard')">
                             {{ __('Dashboard') }}
                         </x-nav-link>
@@ -47,9 +46,14 @@
                             {{ __('Manage Menu Items') }}
                         </x-nav-link>
                     </div>
-                                   <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                         <x-nav-link :href="route('restaurant.menus.index')" :active="request()->routeIs('restaurant.menus.index')">
                             {{ __('Manage Menus') }}
+                        </x-nav-link>
+                    </div>
+                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                        <x-nav-link :href="route('restaurant.profile')" :active="request()->routeIs('restaurant.profile')">
+                            {{ __('Restaurant Profile') }}
                         </x-nav-link>
                     </div>
                 @endrole

@@ -30,7 +30,10 @@ class UserPolicy
     {
         return $user->hasRole('admin');
     }
-
+    public function manageResturant(User $user)
+    {
+        return $user->hasAnyRole(['operator', 'restaurant_owner']);
+    }
     public function viewDashboard(User $user)
     {
         return $user->hasAnyRole(['operator', 'restaurant_owner']);

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Menu;
 use App\Models\MenuItem;
+use App\Models\Restaurant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -156,4 +157,80 @@ class RestaurantOwnerController extends Controller
         $menu->forceDelete();
         return redirect()->route('restaurant.menus.index')->with('success', 'Menu deleted successfully.');
     }
+    public function restaurantProfile()
+    {
+        $user = Auth::user();
+        $restaurant = $user->restaurants->first(); // Get the first restaurant associated with the user
+        if ($restaurant) {
+            // User is a restaurant owner and has a restaurant
+            return view('restaurant_owner.restaurant_profile.edit', compact('restaurant'));
+        } else {
+            // User is a restaurant owner but doesn't have a restaurant
+            return view('restaurant_owner.restaurant_profile.create');
+        }
+    }
+    public function restaurantStore(Request $request)
+    {
+        $user = Auth::user();
+
+        // Validate the request data
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
+            'contact_number' => 'required|string|max:20',
+            'description' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'video' => 'nullable|file|mimes:mp4,avi,mov,wmv|max:20480',
+        ]);
+
+        // Create a new restaurant instance
+        $restaurant = new Restaurant();
+        $restaurant->name = $request->name;
+        $restaurant->address = $request->address;
+        $restaurant->contact_number = $request->contact_number;
+        $restaurant->description = $request->description;
+
+        // Save the restaurant
+        $user->restaurants()->save($restaurant);
+
+        // Handle file uploads for images
+        if ($request->hasFile('image')) {
+            $restaurant->addMedia($request->file('image'))->toMediaCollection('images');
+        }
+
+        // Handle file uploads for videos
+        if ($request->hasFile('video')) {
+            $restaurant->addMedia($request->file('video'))->toMediaCollection('videos');
+        }
+
+        return redirect()->route('restaurant.profile')->with('success', 'Restaurant created successfully.');
+    }
+
+
+    public function restaurantUpdate(Request $request, Restaurant $restaurant)
+    {
+        // Update the restaurant details
+        $restaurant->update($request->all());
+
+        // Handle file uploads for images
+        if ($request->hasFile('image')) {
+            $restaurant->clearMediaCollection('images');
+            $restaurant->addMedia($request->file('image'))->toMediaCollection('images');
+        }
+
+        // Handle file uploads for videos
+        if ($request->hasFile('video')) {
+            $restaurant->clearMediaCollection('videos');
+            $restaurant->addMedia($request->file('video'))->toMediaCollection('videos');
+        }
+
+        return redirect()->route('restaurant.profile')->with('success', 'Restaurant updated successfully.');
+    }
+
+    public function restaurantDestroy(Restaurant $restaurant)
+    {
+        $restaurant->delete();
+        return redirect()->route('restaurant.profile')->with('success', 'Restaurant deleted successfully.');
+    }
+
 }
