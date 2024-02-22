@@ -57,7 +57,7 @@ class RestaurantOwnerController extends Controller
 
         MenuItem::create($validatedData);
 
-        return redirect()->route('restaurant.menu.index')->with('success', 'Menu item created successfully.');
+        return redirect()->route('restaurant.menus.index')->with('success', 'Menu item created successfully.');
     }
 
     public function menuItemsEdit(MenuItem $menuItem)
@@ -79,7 +79,7 @@ class RestaurantOwnerController extends Controller
 
         $menuItem->update($validatedData);
 
-        return redirect()->route('restaurant.menu.index')->with('success', 'Menu item updated successfully.');
+        return redirect()->route('restaurant.menus.index')->with('success', 'Menu item updated successfully.');
     }
 
     public function menuItemsDestroy(MenuItem $menuItem)
@@ -87,10 +87,10 @@ class RestaurantOwnerController extends Controller
         $this->authorize('deleteMenuItem', $menuItem);
 
         $menuItem->forceDelete();
-        return redirect()->route('restaurant.menu.index')->with('success', 'Menu item deleted successfully.');
+        return redirect()->route('restaurant.menus.index')->with('success', 'Menu item deleted successfully.');
     }
 
-    public function menusIndex()
+    public function menuIndex()
     {
         $this->authorize('viewMenus', Auth::user());
 
@@ -113,13 +113,21 @@ class RestaurantOwnerController extends Controller
 
         $request->validate([
             'name' => 'required',
-            // Add other validation rules as needed
         ]);
 
-        Menu::create($request->all());
+        $user = Auth::user();
+        $restaurant = $user->restaurants->first();
 
-        return redirect()->route('restaurant_owner.menus.index')->with('success', 'Menu created successfully.');
+        // Create a new menu and assign the user_id and restaurant_id
+        $menu = new Menu();
+        $menu->name = $request->name;
+        $menu->user_id = $user->id;
+        $menu->restaurant_id = $restaurant->id;
+        $menu->save();
+
+        return redirect()->route('restaurant.menus.index')->with('success', 'Menu created successfully.');
     }
+
 
     public function menuEdit(Menu $menu)
     {
@@ -132,21 +140,20 @@ class RestaurantOwnerController extends Controller
     {
         $this->authorize('editMenu', $menu);
 
-        $request->validate([
+        $validatedData = $request->validate([
             'name' => 'required',
-            // Add other validation rules as needed
         ]);
 
-        $menu->update($request->all());
-
-        return redirect()->route('restaurant_owner.menus.index')->with('success', 'Menu updated successfully.');
+        $menu->update($validatedData);
+        return redirect()->route('restaurant.menus.index')->with('success', 'Menu updated successfully.');
     }
+
 
     public function menuDestroy(Menu $menu)
     {
         $this->authorize('deleteMenu', $menu);
 
-        $menu->delete();
-        return redirect()->route('restaurant_owner.menus.index')->with('success', 'Menu deleted successfully.');
+        $menu->forceDelete();
+        return redirect()->route('restaurant.menus.index')->with('success', 'Menu deleted successfully.');
     }
 }

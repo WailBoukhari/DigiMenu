@@ -12,6 +12,7 @@ class AdminController extends Controller
 {
     public function manageUsers()
     {
+
         $this->authorize('manageUsers', User::class);
 
         $operators = User::role('operator')->get();
@@ -23,7 +24,7 @@ class AdminController extends Controller
 
     public function makeOperator(Request $request, $userId)
     {
-        $this->authorize('makeOperator', User::class);
+        $this->authorize('manageUsers', User::class);
 
         $user = User::findOrFail($userId);
         $user->assignRole('operator');
@@ -37,7 +38,7 @@ class AdminController extends Controller
 
     public function manageOperators()
     {
-        $this->authorize('manageOperators', User::class);
+        $this->authorize('manageUsers', User::class);
 
         $operators = User::role('operator')->get();
         return view('admin.operators.index', compact('operators'));
@@ -52,7 +53,7 @@ class AdminController extends Controller
 
     public function manageRestaurantOwners()
     {
-        $this->authorize('manageRestaurantOwners', User::class);
+        $this->authorize('manageUsers', User::class);
 
         $restaurantOwners = User::role('restaurant_owner')->with('subscriptionPlan')->get();
         return view('admin.restaurant_owners.index', ['restaurantOwners' => $restaurantOwners]);
@@ -60,7 +61,7 @@ class AdminController extends Controller
 
     public function createUserForm()
     {
-        $this->authorize('createUser', User::class);
+        $this->authorize('manageUsers', User::class);
 
         $roles = Role::all();
         return view('admin.users.create', compact('roles'));
@@ -68,14 +69,14 @@ class AdminController extends Controller
 
     public function createUser(Request $request)
     {
-        $this->authorize('createUser', User::class);
+        $this->authorize('manageUsers', User::class);
 
         // Logic to create a new user
     }
 
     public function editUserForm(User $user)
     {
-        $this->authorize('editUser', $user);
+        $this->authorize('manageUsers', $user);
 
         $roles = Role::all();
         return view('admin.users.edit', compact('user', 'roles'));
@@ -83,15 +84,8 @@ class AdminController extends Controller
 
     public function editUser(Request $request, User $user)
     {
-        $this->authorize('editUser', $user);
+        $this->authorize('manageUsers', $user);
 
         // Logic to update user information
-    }
-
-    public function removeOperatorRole($id)
-    {
-        $this->authorize('removeOperatorRole', User::class);
-
-        // Logic to remove operator role
     }
 }

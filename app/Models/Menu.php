@@ -18,7 +18,6 @@ class Menu extends Model
     protected $dates = ['deleted_at'];
     protected $fillable = [
         'name',
-        'price',
         'restaurant_id',
     ];
 

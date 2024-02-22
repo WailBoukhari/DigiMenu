@@ -2,8 +2,6 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\MenuController;
-use App\Http\Controllers\MenuItemController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RestaurantOwnerController;
 use App\Http\Controllers\SubscriptionController;
@@ -60,12 +58,12 @@ Route::group(['middleware' => 'auth'], function () {
     Route::put('/restaurant/menu/{menuItem}', [RestaurantOwnerController::class, 'menuItemsUpdate'])->name('restaurant.menu.update');
     Route::delete('/restaurant/menu/{menuItem}', [RestaurantOwnerController::class, 'menuItemsDestroy'])->name('restaurant.menu.destroy');
 
-    Route::get('/restaurant_owner/menus', [RestaurantOwnerController::class, 'menusIndex'])->name('restaurant.menus.index');
-    Route::get('/menus/create', [RestaurantOwnerController::class, 'menusCreate'])->name('restaurant.menus.create');
-    Route::post('/menus', [RestaurantOwnerController::class, 'menusStore'])->name('restaurant.menus.store');
-    Route::get('/menus/{menu}/edit', [RestaurantOwnerController::class, 'menusEdit'])->name('restaurant.menus.edit');
-    Route::put('/menus/{menu}', [RestaurantOwnerController::class, 'menusUpdate'])->name('restaurant.menus.update');
-    Route::delete('/menus/{menu}', [RestaurantOwnerController::class, 'menusDestroy'])->name('restaurant.menus.destroy');
+    Route::get('/restaurant_owner/menus', [RestaurantOwnerController::class, 'menuIndex'])->name('restaurant.menus.index');
+    Route::get('/menus/create', [RestaurantOwnerController::class, 'menuCreate'])->name('restaurant.menus.create');
+    Route::post('/menus', [RestaurantOwnerController::class, 'menuStore'])->name('restaurant.menus.store');
+    Route::get('/menus/{menu}/edit', [RestaurantOwnerController::class, 'menuEdit'])->name('restaurant.menus.edit');
+    Route::put('/menus/{menu}', [RestaurantOwnerController::class, 'menuUpdate'])->name('restaurant.menus.update');
+    Route::delete('/menus/{menu}', [RestaurantOwnerController::class, 'menuDestroy'])->name('restaurant.menus.destroy');
 });
 
 

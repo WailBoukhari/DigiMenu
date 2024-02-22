@@ -9,7 +9,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-700 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
-                    <form action="{{ route('restaurant.menus.store') }}" method="POST">
+                    <form action="{{ route('restaurant.menu.store') }}" method="POST">
                         @csrf
                         <div class="mb-4">
                             <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Menu Name</label>

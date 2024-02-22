@@ -15,13 +15,17 @@ class MenuSeeder extends Seeder
      */
     public function run()
     {
-        $userIds = User::pluck('id')->toArray(); // Get all user ids
+        // Get all restaurant owners
+        $restaurantOwners = User::whereHas('roles', function ($query) {
+            $query->where('name', 'restaurant_owner');
+        })->get();
 
-        foreach ($userIds as $userId) {
-            Menu::factory()->count(3)->create(['user_id' => $userId])
+        // Create three menus for each restaurant owner
+        $restaurantOwners->each(function ($owner) {
+            Menu::factory()->count(3)->create(['user_id' => $owner->id])
                 ->each(function ($menu) {
                     MenuItem::factory()->count(10)->create(['menu_id' => $menu->id]);
                 });
-        }
+        });
     }
 }

@@ -82,19 +82,19 @@ class User extends Authenticatable
     {
         return $this->hasMany(Menu::class);
     }
-    protected static function boot()
-    {
-        parent::boot();
+    // protected static function boot()
+    // {
+    //     parent::boot();
 
-        static::updating(function ($user) {
-            if ($user->isDirty('subscription_expires_at')) {
-                $expirationDate = $user->subscription_expires_at;
-                if ($expirationDate && $expirationDate->isPast()) {
-                    $user->delete();
-                }
-            }
-        });
-    }
+    //     static::updating(function ($user) {
+    //         if ($user->isDirty('subscription_expires_at')) {
+    //             $expirationDate = $user->subscription_expires_at;
+    //             if ($expirationDate && $expirationDate->isPast()) {
+    //                 $user->delete();
+    //             }
+    //         }
+    //     });
+    // }
  
 
     // Define the relationship with the subscription plan

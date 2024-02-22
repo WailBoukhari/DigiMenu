@@ -18,6 +18,18 @@ class UserPolicy
             return true;
         }
     }
+    public function manageUsers(User $user)
+    {
+        return $user->hasRole('admin');
+    }
+        public function manageSubscribers(User $user)
+    {
+        return $user->hasRole('admin');
+    }
+        public function manageOperators(User $user)
+    {
+        return $user->hasRole('admin');
+    }
 
     public function viewDashboard(User $user)
     {
@@ -61,9 +73,9 @@ class UserPolicy
 
     public function deleteMenuItem(User $user, MenuItem $menuItem)
     {
-        // Allow deletion if the user has the 'restaurant_owner' role and owns the menu item
-        return $user->hasRole('restaurant_owner') && $user->id === $menuItem->user_id;
+        return $user->hasRole('restaurant_owner');
     }
+
     public function createMenu(User $user)
     {
         return $user->hasRole('restaurant_owner');
@@ -71,7 +83,6 @@ class UserPolicy
 
     public function deleteMenu(User $user, Menu $menu)
     {
-        // Allow deletion if the user has the 'restaurant_owner' role and owns the menu
-        return $user->hasRole('restaurant_owner') && $user->id === $menu->user_id;
+        return $user->hasRole('restaurant_owner');
     }
 }
