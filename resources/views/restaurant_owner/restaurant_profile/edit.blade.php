@@ -45,15 +45,12 @@
                             <textarea id="description" class="block mt-1 w-full" name="description" rows="4">{{ $restaurant->description }}</textarea>
                         </div>
                         <!-- Image Display -->
-                     <div class="mt-4">
-                            <label class="block font-medium text-sm text-gray-700 dark:text-gray-300">{{ __('Image') }}</label>
-@if($restaurant->hasMedia('image'))
-    <!-- Get the URL of the first image -->
-    <img src="{{ $restaurant->getFirstMediaUrl('image') }}" alt="Restaurant Image">
-@else
-    <!-- Display a placeholder image or message -->
-    <img src="{{ asset('path/to/placeholder-image.jpg') }}" alt="Placeholder Image">
-@endif
+                        <div class="mt-4">
+                            @if ($imageUrl)
+                                <img src="{{ $imageUrl }}" alt="Restaurant Image">
+                            @else
+                                <p>No image available</p>
+                            @endif
                         </div>
                         <!-- Image Upload -->
                         <div class="mt-4">

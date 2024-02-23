@@ -54,10 +54,15 @@ class User extends Authenticatable
         'subscription_expires_at' => 'datetime',
     ];
 
+    public function restaurant()
+    {
+        return $this->belongsToMany(User::class, 'operator_restaurant', 'restaurant_id', 'operator_id');
+    }
     public function restaurants()
     {
-        return $this->belongsToMany(Restaurant::class, 'operator_restaurant', 'operator_id', 'restaurant_id');
+        return $this->hasMany(Restaurant::class, 'owner_id');
     }
+
     public function subscriptionPlan()
     {
         return $this->belongsTo(SubscriptionPlan::class);

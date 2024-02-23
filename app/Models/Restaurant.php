@@ -14,12 +14,18 @@ class Restaurant extends Model implements HasMedia
         'address',
         'contact_number',
         'description',
-        'image',
-        'video',
     ];
     public function operators()
     {
         return $this->belongsToMany(User::class, 'operator_restaurant', 'restaurant_id', 'operator_id');
     }
-
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'owner_id');
+    }
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('images');
+        $this->addMediaCollection('videos');
+    }
 }

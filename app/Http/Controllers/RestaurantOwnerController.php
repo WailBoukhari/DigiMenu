@@ -104,7 +104,9 @@ class RestaurantOwnerController extends Controller
     public function menuCreate()
     {
         $this->authorize('createMenu', Menu::class);
-
+        // $user = Auth::user();
+        // $restaurant = $user->restaurants->first();
+        // dd($restaurant);
         return view('restaurant_owner.menus.create');
     }
 
@@ -118,8 +120,7 @@ class RestaurantOwnerController extends Controller
 
         $user = Auth::user();
         $restaurant = $user->restaurants->first();
-
-        // Create a new menu and assign the user_id and restaurant_id
+       
         $menu = new Menu();
         $menu->name = $request->name;
         $menu->user_id = $user->id;
@@ -160,10 +161,18 @@ class RestaurantOwnerController extends Controller
     public function restaurantProfile()
     {
         $user = Auth::user();
-        $restaurant = $user->restaurants->first(); // Get the first restaurant associated with the user
+        $restaurant = $user->restaurants->first();
+        // dd($restaurant);
+
+        // dd($restaurant);
         if ($restaurant) {
-            // User is a restaurant owner and has a restaurant
-            return view('restaurant_owner.restaurant_profile.edit', compact('restaurant'));
+            $imageUrl = $restaurant->getFirstMediaUrl('images');
+            $videoUrl = $restaurant->getFirstMediaUrl('videos');
+            // $media = $restaurant->getMedia('images');
+            // dd($media);
+            // dd($imageUrl);
+
+            return view('restaurant_owner.restaurant_profile.edit', compact('restaurant' , 'imageUrl'));
         } else {
             // User is a restaurant owner but doesn't have a restaurant
             return view('restaurant_owner.restaurant_profile.create');
@@ -224,14 +233,20 @@ class RestaurantOwnerController extends Controller
 
         // Handle file uploads for images
         if ($request->hasFile('image')) {
+            $image = $request->file('image');
+
+            // Store the image in the 'images' collection
             $restaurant->clearMediaCollection('images');
-            $restaurant->addMedia($request->file('image'))->toMediaCollection('images');
+            $restaurant->addMedia($image)->toMediaCollection('images');
         }
 
         // Handle file uploads for videos
         if ($request->hasFile('video')) {
+            $video = $request->file('video');
+
+            // Store the video in the 'videos' collection
             $restaurant->clearMediaCollection('videos');
-            $restaurant->addMedia($request->file('video'))->toMediaCollection('videos');
+            $restaurant->addMedia($video)->toMediaCollection('videos');
         }
 
         return redirect()->route('restaurant.profile')->with('success', 'Restaurant updated successfully.');
@@ -244,4 +259,24 @@ class RestaurantOwnerController extends Controller
         return redirect()->route('restaurant.profile')->with('success', 'Restaurant deleted successfully.');
     }
 
+}
+function compute($paris, $newyork, $london)
+{
+    // Calculate the total minutes difference between Paris and New York
+    $paris_minutes = $paris->hours * 60 + $paris->minutes;
+    $newyork_minutes = $newyork->hours * 60 + $newyork->minutes;
+    $paris_newyork_difference = abs($paris_minutes - $newyork_minutes);
+
+    // Calculate the total minutes difference between Paris and London
+    $london_minutes = $london->hours * 60 + $london->minutes;
+    $paris_london_difference = abs($paris_minutes - $london_minutes);
+
+    // Calculate the total minutes difference between New York and London
+    $newyork_london_difference = abs($newyork_minutes - $london_minutes);
+
+    // Find the maximum difference among the three
+    $max_difference = max($paris_newyork_difference, $paris_london_difference, $newyork_london_difference);
+
+    // Return the maximum difference
+    return $max_difference;
 }

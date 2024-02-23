@@ -37,8 +37,6 @@ class RestaurantFactory extends Factory
             'address' => $this->faker->address(),
             'contact_number' => $this->faker->phoneNumber(),
             'description' => $this->faker->paragraph(),
-            'image' => null,
-            'media' => null,
             'owner_id' => $owner->id,
         ];
     }
