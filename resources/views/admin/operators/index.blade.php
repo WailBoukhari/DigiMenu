@@ -13,28 +13,45 @@
                     <ul class="divide-y divide-gray-600 dark:divide-gray-700">
                         @foreach ($operators as $operator)
                             <li class="py-4">
-                                <p class="text-lg font-semibold mb-1 text-gray-300 dark:text-gray-100">{{ $operator->name }}</p>
+                                <p class="text-lg font-semibold mb-1 text-gray-300 dark:text-gray-100">
+                                    {{ $operator->name }}
+                                </p>
                                 <p class="text-gray-400 dark:text-gray-300">{{ $operator->email }}</p>
-                                
-                                <p class="text-gray-400 dark:text-gray-300 mt-2">{{ __('Restaurants:') }}</p>
-                                <ul>
+
+                                <p class="text-gray-400 dark:text-gray-300 mt-2">{{ __('Owner:') }}</p>
+                                @if ($operator->restaurants && $operator->restaurants->isNotEmpty())
                                     @foreach ($operator->restaurants as $restaurant)
-                                        <li class="text-gray-400 dark:text-gray-300 ml-4">{{ $restaurant->name }}</li>
+                                        <p class="text-gray-400 dark:text-gray-300 ml-4">
+                                            @if ($restaurant->owner)
+                                                {{ $restaurant->owner->name }}
+                                            @else
+                                                {{ __('Unknown') }}
+                                            @endif
+                                        </p>
                                     @endforeach
-                                </ul>
+                                @else
+                                    <p class="text-gray-400 dark:text-gray-300 ml-4">{{ __('No associated owner') }}</p>
+                                @endif
 
-                                <div class="flex mt-4">
-                                    <a href="{{ route('edit.operator', $operator->id) }}" class="bg-blue-500 dark:bg-blue-700 hover:bg-blue-600 dark:hover:bg-blue-800 text-white font-bold py-2 px-4 rounded mr-2">
-                                        {{ __('Edit') }}
-                                    </a>
+                                <p class="text-gray-400 dark:text-gray-300 mt-2">{{ __('Restaurant:') }}</p>
+                                @if ($operator->restaurants && $operator->restaurants->isNotEmpty())
+                                    <ul>
+                                        @foreach ($operator->restaurants as $restaurant)
+                                            <li class="text-gray-400 dark:text-gray-300 ml-4">{{ $restaurant->name }}</li>
+                                        @endforeach
+                                    </ul>
+                                @else
+                                    <p class="text-gray-400 dark:text-gray-300 ml-4">{{ __('No associated restaurants') }}</p>
+                                @endif
 
-                                    <form action="{{ route('remove.operator.role', $operator->id) }}" method="POST">
-                                        @csrf
-                                        <button type="submit" class="bg-red-500 dark:bg-red-700 hover:bg-red-600 dark:hover:bg-red-800 text-white font-bold py-2 px-4 rounded">
-                                            {{ __('Delete') }}
-                                        </button>
-                                    </form>
-                                </div>
+                                <form action="{{ route('remove.operator.role', ['id' => $operator->id]) }}"
+                                      method="POST">
+                                    @csrf
+                                    <button type="submit"
+                                            class="mt-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                                        {{ __('Remove Operator Role') }}
+                                    </button>
+                                </form>
                             </li>
                         @endforeach
                     </ul>

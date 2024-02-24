@@ -10,6 +10,9 @@ use Spatie\Permission\Models\Role;
 
 class AdminController extends Controller
 {
+    public function dashboard() {
+        return view('admin.admin_dahbaord');
+    }
     public function manageUsers()
     {
 
@@ -26,16 +29,33 @@ class AdminController extends Controller
     {
         $this->authorize('manageUsers', User::class);
 
+        $restaurantId = $request->input('restaurant_id');
+        $restaurant = Restaurant::findOrFail($restaurantId);
+
         $user = User::findOrFail($userId);
         $user->assignRole('operator');
 
-        $restaurantId = $request->input('restaurant_id');
-        $restaurant = Restaurant::findOrFail($restaurantId);
-        $user->restaurants()->sync([$restaurantId]);
+        // Set the restaurant_id on the user model
+        $user->restaurant_id = $restaurantId;
+        $user->save();
 
         return redirect()->back()->with('success', 'User has been assigned as an operator.');
     }
 
+
+    public function removeOperatorRole($id)
+    {
+        $operator = User::findOrFail($id);
+
+        // Detach the operator role
+        $operator->removeRole('operator');
+
+        // Remove the association with the restaurant by setting restaurant_id to null
+        $operator->restaurant_id = null;
+        $operator->save();
+
+        return redirect()->back()->with('success', 'Operator role removed successfully.');
+    }
     public function manageOperators()
     {
         $this->authorize('manageUsers', User::class);

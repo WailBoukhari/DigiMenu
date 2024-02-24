@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 
 class RestaurantOwnerController extends Controller
 {
-    public function dashboard()
+    public function dashboardOwner()
     {
         $this->authorize('viewDashboard', Auth::user());
 
@@ -24,9 +24,33 @@ class RestaurantOwnerController extends Controller
             $remainingTime = now()->diff($user->subscription_expires_at)->format('%d days %h hours %i minutes');
         }
 
-        return view('restaurant_owner.dashboard', compact('user', 'hasSubscription', 'remainingTime', 'subscriptionExpired'));
+        return view('restaurant_owner.restaurant_owner_dashboard', compact('user', 'hasSubscription', 'remainingTime', 'subscriptionExpired'));
+    }
+    public function dashboardOperator()
+    {
+        $this->authorize('viewDashboard', Auth::user());
+
+        $user = auth()->user();
+        $hasSubscription = $user->subscriptionPlan;
+        $subscriptionExpired = $user->subscription_expires_at && now() > $user->subscription_expires_at;
+
+        $remainingTime = null;
+        if ($hasSubscription && !$subscriptionExpired) {
+            $remainingTime = now()->diff($user->subscription_expires_at)->format('%d days %h hours %i minutes');
+        }
+
+        return view('restaurant_owner.operator_dashboard', compact('user', 'hasSubscription', 'remainingTime', 'subscriptionExpired'));
     }
 
+    public function menuItemOperatorIndex()
+    {
+        $this->authorize('viewMenuItems', Auth::user());
+
+        $subscriptionExpired = auth()->user()->subscriptionExpired();
+        $menuItems = $subscriptionExpired ? collect() : MenuItem::all();
+
+        return view('restaurant_owner.operator.menu_items_index', compact('menuItems', 'subscriptionExpired'));
+    }
     public function menuItemsIndex()
     {
         $this->authorize('viewMenuItems', Auth::user());
@@ -89,6 +113,16 @@ class RestaurantOwnerController extends Controller
 
         $menuItem->forceDelete();
         return redirect()->route('restaurant.menus.index')->with('success', 'Menu item deleted successfully.');
+    }
+    public function menuOperatorIndex()
+    {
+        $this->authorize('viewMenus', Auth::user());
+
+        $owner = Auth::user()->owner;
+        $subscriptionExpired = $owner ? $owner->subscriptionExpired() : true;
+        $menus = $owner ? $owner->menus : [];
+
+        return view('restaurant_owner.operator.menu_index', compact('menus', 'subscriptionExpired'));
     }
 
     public function menuIndex()

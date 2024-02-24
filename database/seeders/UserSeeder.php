@@ -9,39 +9,44 @@ use Illuminate\Database\Seeder;
 
 class UserSeeder extends Seeder
 {
-    /** 
+    /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        // User::factory()->count(10)->create();
+        User::factory()->count(3)->create();
 
         $plans = SubscriptionPlan::all();
 
-        // Create 10 restaurant_owner users with associated restaurants and subscription plans
-        User::factory()->count(10)->create()->each(function ($user) use ($plans) {
-            // Get a random subscription plan
+        User::factory()->count(3)->create()->each(function ($user) use ($plans) {
             $plan = $plans->random();
+            $user->subscriptionPlan()->associate($plan);
 
-            // Assign the role of restaurant owner to the user
             $user->assignRole('restaurant_owner');
 
-            // Create a restaurant for the user
             $restaurant = Restaurant::factory()->create(['owner_id' => $user->id]);
-
-            // Associate the restaurant with the user
             $user->restaurants()->save($restaurant);
 
-            // Associate the subscription plan with the user
-            $user->subscriptionPlan()->associate($plan);
+            $user->email = str_replace(' ', '', $user->name) . '@owner.com';
             $user->save();
         });
 
-        // User::factory()->count(10)->create()->each(function ($user) {
-        //     $restaurant = Restaurant::factory()->create(['owner_id' => $user->id]);
-        //     $user->assignRole('operator');
-        //     $user->restaurants()->save($restaurant);
-        // });
+        User::factory()->count(3)->create()->each(function ($user) {
+            // Assign the operator role
+            $user->assignRole('operator');
+
+            // Get a random existing restaurant
+            $restaurant = Restaurant::inRandomOrder()->first();
+
+            // If a restaurant exists, associate the operator with it
+            if ($restaurant) {
+                // Associate the operator with the restaurant
+                $user->restaurants()->attach($restaurant);
+            }
+
+            // Save the user with updated email
+            $user->email = str_replace(' ', '', $user->name) . '@operator.com';
+            $user->save();
+        });
     }
 }
-  
