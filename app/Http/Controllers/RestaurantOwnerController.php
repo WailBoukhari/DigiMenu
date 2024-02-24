@@ -104,9 +104,7 @@ class RestaurantOwnerController extends Controller
     public function menuCreate()
     {
         $this->authorize('createMenu', Menu::class);
-        // $user = Auth::user();
-        // $restaurant = $user->restaurants->first();
-        // dd($restaurant);
+
         return view('restaurant_owner.menus.create');
     }
 
@@ -120,7 +118,7 @@ class RestaurantOwnerController extends Controller
 
         $user = Auth::user();
         $restaurant = $user->restaurants->first();
-       
+      
         $menu = new Menu();
         $menu->name = $request->name;
         $menu->user_id = $user->id;
