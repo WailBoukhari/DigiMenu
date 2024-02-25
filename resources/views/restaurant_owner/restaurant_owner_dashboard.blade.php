@@ -15,15 +15,21 @@
                             @if ($hasSubscription)
                                 <div>
                                     <h2 class="text-lg font-semibold mb-2 text-gray-200">Subscription Details:</h2>
-                                    <p class="text-gray-300"><strong>Plan:</strong> {{ $user->subscriptionPlan->name }}</p>
-                                    <p class="text-gray-300"><strong>Expires At:</strong> {{ $user->subscription_expires_at }}</p>
+                                    <p class="text-gray-300"><strong>Plan:</strong> {{ $user->subscriptionPlan->name }}
+                                    </p>
+                                    <p class="text-gray-300"><strong>Expires At:</strong>
+                                        {{ $user->subscription_expires_at }}</p>
                                 </div>
 
                                 @if ($subscriptionExpired)
-                                    <div class="bg-red-700 border border-red-900 text-red-100 px-4 py-3 rounded relative" role="alert">
+                                    <div class="bg-red-700 border border-red-900 text-red-100 px-4 py-3 rounded relative"
+                                        role="alert">
                                         <strong class="font-bold">Alert!</strong>
-                                        <span class="block sm:inline"> Your subscription has ended. Please renew your subscription to continue accessing this feature.</span>
-                                        <a href="{{ route('subscription.form') }}" class="mt-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Renew Subscription</a>
+                                        <span class="block sm:inline"> Your subscription has ended. Please renew your
+                                            subscription to continue accessing this feature.</span>
+                                        <a href="{{ route('subscription.form') }}"
+                                            class="mt-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Renew
+                                            Subscription</a>
                                     </div>
                                 @else
                                     <div class="mt-4">
@@ -31,6 +37,13 @@
                                         <p class="text-gray-300">{{ $remainingTime }}</p>
                                     </div>
                                 @endif
+
+                                <!-- Display link to the restaurant -->
+                                <div class="mt-4">
+                                  @foreach ($user->restaurants as $restaurant)
+    <a href="{{ route('menu', $restaurant->slug) }}" class="text-blue-400 hover:underline">View {{ $restaurant->name }}</a>
+@endforeach
+                                </div>
                             @else
                                 <p class="text-gray-300">No subscription found.</p>
                             @endif
