@@ -40,9 +40,10 @@
 
                                 <!-- Display link to the restaurant -->
                                 <div class="mt-4">
-                                  @foreach ($user->restaurants as $restaurant)
-    <a href="{{ route('menu', $restaurant->slug) }}" class="text-blue-400 hover:underline">View {{ $restaurant->name }}</a>
-@endforeach
+                                    @foreach ($user->restaurants as $restaurant)
+                                        <a href="{{ route('menu', $restaurant->slug) }}"
+                                            class="text-blue-400 hover:underline">View {{ $restaurant->name }}</a>
+                                    @endforeach
                                 </div>
                             @else
                                 <p class="text-gray-300">No subscription found.</p>
