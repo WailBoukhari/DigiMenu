@@ -6,18 +6,21 @@
     </x-slot>
 
     <!-- Modal -->
-    <div id="myModal" class="modal hidden fixed inset-0 z-50 overflow-auto bg-gray-900 bg-opacity-50 flex justify-center items-center">
+    <div id="myModal"
+        class="modal hidden fixed inset-0 z-50 overflow-auto bg-gray-900 bg-opacity-50 flex justify-center items-center">
         <div class="modal-content bg-white dark:bg-gray-800 p-8 rounded shadow-lg w-96">
             <span class="close absolute top-0 right-0 px-4 py-2 cursor-pointer">&times;</span>
             <form id="restaurantForm" method="POST">
                 @csrf
                 <label for="restaurantName" class="block text-gray-700 dark:text-gray-300 mb-4">Select Restaurant:</label>
-                <select id="restaurantName" name="restaurant_id" class="block w-full p-2 mb-4 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:border-blue-500 dark:focus:border-blue-500">
+                <select id="restaurantName" name="restaurant_id"
+                    class="block w-full p-2 mb-4 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:border-blue-500 dark:focus:border-blue-500">
                     @foreach ($restaurants as $restaurant)
                         <option value="{{ $restaurant->id }}">{{ $restaurant->name }}</option>
                     @endforeach
                 </select>
-                <button type="submit" class="bg-blue-500 dark:bg-blue-700 hover:bg-blue-600 dark:hover:bg-blue-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                <button type="submit"
+                    class="bg-blue-500 dark:bg-blue-700 hover:bg-blue-600 dark:hover:bg-blue-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                     Submit
                 </button>
             </form>
@@ -33,8 +36,9 @@
                     </div>
                 </div>
                 <div class="p-6 sm:px-20 bg-white dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
-                        <div class="mb-4">
-                        <a href="{{ route('admin.users.create') }}" class="bg-green-500 dark:bg-green-700 hover:bg-green-600 dark:hover:bg-green-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                    <div class="mb-4">
+                        <a href="{{ route('admin.users.create') }}"
+                            class="bg-green-500 dark:bg-green-700 hover:bg-green-600 dark:hover:bg-green-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                             Add User
                         </a>
                     </div>
@@ -72,18 +76,22 @@
                                         <div class="text-sm text-gray-900 dark:text-gray-300">{{ $user->email }}</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <button onclick="openModal('{{ $user->id }}')" class="bg-blue-500 dark:bg-blue-700 hover:bg-blue-600 dark:hover:bg-blue-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                                        <button onclick="openModal('{{ $user->id }}')"
+                                            class="bg-blue-500 dark:bg-blue-700 hover:bg-blue-600 dark:hover:bg-blue-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                                             Make Operator
                                         </button>
                                         <!-- Edit Button -->
-                                        <a href="{{ route('admin.users.edit', $user->id) }}" class="bg-yellow-500 dark:bg-yellow-700 hover:bg-yellow-600 dark:hover:bg-yellow-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                                        <a href="{{ route('admin.users.edit', $user->id) }}"
+                                            class="bg-yellow-500 dark:bg-yellow-700 hover:bg-yellow-600 dark:hover:bg-yellow-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                                             Edit
                                         </a>
                                         <!-- Delete Button -->
-                                        <form action="{{ route('admin.users.edit', $user->id) }}" method="POST" style="display: inline;">
+                                        <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST"
+                                            class="inline">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="bg-red-500 dark:bg-red-700 hover:bg-red-600 dark:hover:bg-red-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                                            <button type="submit"
+                                                class="bg-red-500 dark:bg-red-700 hover:bg-red-600 dark:hover:bg-red-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                                                 Delete
                                             </button>
                                         </form>

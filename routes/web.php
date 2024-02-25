@@ -61,7 +61,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/admin/users/store', [AdminController::class, 'createUser'])->name('admin.users.store');
     Route::get('/admin/users/{user}/edit', [AdminController::class, 'editUserForm'])->name('admin.users.edit');
     Route::put('/admin/users/{user}', [AdminController::class, 'editUser'])->name('admin.users.update');
-    Route::delete('/users/{user}', [AdminController::class, 'destroyUser'])->name('admin.users.destroy');
+    Route::delete('admin/users/{user}', [AdminController::class, 'destroyUser'])->name('admin.users.destroy');
 
 
     Route::post('/remove-operator-role/{id}', [AdminController::class, 'removeOperatorRole'])->name('remove.operator.role');
@@ -72,6 +72,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/admin/subscription-plans', [AdminController::class, 'storeSubscribers'])->name('admin.subscription.store');
     Route::get('/admin/subscription-plans/{id}/edit', [AdminController::class, 'editSubscribers'])->name('admin.subscription.edit');
     Route::put('/admin/subscription-plans/{id}', [AdminController::class, 'updateSubscribers'])->name('admin.subscription.update');
+    Route::delete('/admin/subscription/{plan}', [AdminController::class, 'destroySubscribers'])->name('admin.subscription.destroy');
 
     Route::get('/restaurant_owner/dashboard', [RestaurantOwnerController::class, 'dashboardOwner'])->name('restaurant_owner.dashboard');
     Route::get('/operator/dashboard', [RestaurantOwnerController::class, 'dashboardOperator'])->name('operator.dashboard');

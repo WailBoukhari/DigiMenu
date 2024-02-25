@@ -11,7 +11,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
-use Spatie\Permission\Models\Role;
 
 class AdminController extends Controller
 {
@@ -115,9 +114,9 @@ class AdminController extends Controller
 
         return redirect()->route('admin.users.index')->with('success', 'User updated successfully.');
     }
-    public function destroyUser(User $user)
+    public function destroyUser(Request $request,User $user)
     {
-        $user->delete();
+        $user->forceDelete();
 
         return redirect()->route('admin.users.index')->with('success', 'User deleted successfully.');
     }
@@ -145,7 +144,7 @@ class AdminController extends Controller
 
         SubscriptionPlan::create($validatedData);
 
-        return redirect()->route('subscription.index')->with('success', 'Subscription plan created successfully.');
+        return redirect()->route('admin.subscribers.index')->with('success', 'Subscription plan created successfully.');
     }
 
     // Show the form to edit a subscription plan
@@ -170,6 +169,13 @@ class AdminController extends Controller
         $subscriptionPlan->update($validatedData);
 
         return redirect()->route('admin.subscribers.index')->with('success', 'Subscription plan updated successfully.');
+    }
+
+    public function destroySubscribers(SubscriptionPlan $plan)
+    {
+        $plan->delete();
+
+        return redirect()->route('admin.subscribers.index')->with('success', 'Subscription plan deleted successfully.');
     }
 
 }
