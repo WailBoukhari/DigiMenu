@@ -20,7 +20,13 @@
                                     <p class="text-gray-300"><strong>Expires At:</strong>
                                         {{ $user->subscription_expires_at }}</p>
                                 </div>
-
+                                <!-- Display link to the restaurant -->
+                                <div class="mt-4">
+                                    @foreach ($user->restaurants as $restaurant)
+                                        <a href="{{ route('menu', $restaurant->slug) }}"
+                                            class="text-blue-400 hover:underline">View {{ $restaurant->name }}</a>
+                                    @endforeach
+                                </div>
                                 @if ($subscriptionExpired)
                                     <div class="bg-red-700 border border-red-900 text-red-100 px-4 py-3 rounded relative"
                                         role="alert">
@@ -38,13 +44,6 @@
                                     </div>
                                 @endif
 
-                                <!-- Display link to the restaurant -->
-                                <div class="mt-4">
-                                    @foreach ($user->restaurants as $restaurant)
-                                        <a href="{{ route('menu', $restaurant->slug) }}"
-                                            class="text-blue-400 hover:underline">View {{ $restaurant->name }}</a>
-                                    @endforeach
-                                </div>
                             @else
                                 <p class="text-gray-300">No subscription found.</p>
                             @endif

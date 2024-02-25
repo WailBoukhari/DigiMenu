@@ -12,8 +12,16 @@
                     <h3 class="text-lg font-semibold mb-4">Welcome, {{ $user->name }}!</h3>
                     @if ($user->hasRole('admin') || $user->hasRole('restaurant_owner') || $user->hasRole('operator'))
                         <p class="text-gray-600">You are authenticated as {{ $user->getRoleNames()->implode(', ') }}.</p>
+                        <!-- Display link to the restaurant -->
+                        <div class="mt-4">
+                            @foreach ($user->restaurants as $restaurant)
+                                <a href="{{ route('menu', $restaurant->slug) }}"
+                                    class="text-blue-400 hover:underline">View {{ $restaurant->name }}</a>
+                            @endforeach
+                        </div>
                     @else
-                        <p class="text-gray-600">You do not have any assigned roles. Please contact the administrator.</p>
+                        <p class="text-gray-600">You do not have any assigned roles. Please contact the administrator.
+                        </p>
                     @endif
                 </div>
             </div>
