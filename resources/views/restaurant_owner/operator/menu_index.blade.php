@@ -8,10 +8,9 @@
     <div class="py-12">
         <div class="mx-auto container">
             @if ($subscriptionExpired)
-                <!-- Subscription expired message -->
-                <div class="bg-red-600 border border-red-800 text-red-100 px-4 py-3 rounded relative mb-4" role="alert">
-                    <strong class="font-bold">The owner's subscription has expired!</strong>
-                    <span class="block sm:inline">Please contact the owner to renew the subscription.</span>
+                <!-- Display message -->
+                <div class="bg-red-600 border border-red-700 text-white px-4 py-3 rounded relative mb-4" role="alert">
+                    <strong class="font-bold">{{ $message }}</strong>
                 </div>
             @else
                 <div class="bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
@@ -37,18 +36,18 @@
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody class="bg-gray-800 divide-y divide-gray-600">
-                                    @forelse ($menus as $menu)
+                                               <tbody class="bg-gray-800 divide-y divide-gray-600">
+                                    @foreach ($menus as $menu)
                                         <tr>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                                                 {{ $menu->name }}
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm">
                                                 <!-- Edit menu button -->
-                                                <a href="{{ route('operator.menus.edit', $menu->id) }}"
+                                                <a href="{{ route('restaurant.menus.edit', $menu->id) }}"
                                                     class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2">Edit</a>
                                                 <!-- Delete menu button -->
-                                                <form action="{{ route('operator.menus.destroy', $menu->id) }}"
+                                                <form action="{{ route('restaurant.menus.destroy', $menu->id) }}"
                                                     method="POST" class="inline">
                                                     @csrf
                                                     @method('DELETE')
@@ -57,13 +56,7 @@
                                                 </form>
                                             </td>
                                         </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="2" class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                                                No menus found.
-                                            </td>
-                                        </tr>
-                                    @endforelse
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>

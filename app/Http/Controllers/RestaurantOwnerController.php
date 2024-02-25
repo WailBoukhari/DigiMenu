@@ -9,8 +9,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Menu;
 use App\Models\MenuItem;
 use App\Models\Restaurant;
+use App\Models\SubscriptionPlan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class RestaurantOwnerController extends Controller
 {
@@ -45,29 +47,33 @@ class RestaurantOwnerController extends Controller
         return view('restaurant_owner.operator_dashboard', compact('user', 'hasSubscription', 'remainingTime', 'subscriptionExpired'));
     }
 
+
     public function menuItemOperatorIndex()
     {
-
         $this->authorize('viewMenuItems', Auth::user());
+        $operator = Auth::user();
 
-        $subscriptionExpired = auth()->user()->subscriptionExpired();
+        $owner = $operator->restaurants->first()->owner;
 
-        $userMenus = auth()->user()->menus;
+        $subscriptionExpired = optional($owner->subscription_expires_at)->isPast();
 
+        $message = $subscriptionExpired ? "The owner's subscription has ended. Please contact the owner to renew the subscription." : null;
+
+        $userMenus = $owner->menus;
         $menuItems = collect();
-
         foreach ($userMenus as $menu) {
             $menuItems = $menuItems->merge($menu->menuItems);
         }
-
-        return view('restaurant_owner.operator.menu_items_index', compact('menuItems', 'subscriptionExpired'));
+        return view('restaurant_owner.operator.menu_items_index', compact('menuItems', 'message', 'subscriptionExpired'));
     }
+
+
+
     public function menuItemsIndex()
     {
         $this->authorize('viewMenuItems', Auth::user());
-
-        $subscriptionExpired = auth()->user()->subscriptionExpired();
-
+        $owner = auth()->user();
+        $subscriptionExpired = optional($owner->subscription_expires_at)->isPast();
         $userMenus = auth()->user()->menus;
 
         $menuItems = collect();
@@ -76,7 +82,10 @@ class RestaurantOwnerController extends Controller
             $menuItems = $menuItems->merge($menu->menuItems);
         }
 
-        return view('restaurant_owner.menu_items.index', compact('menuItems', 'subscriptionExpired'));
+
+        $subscriptionPlan = SubscriptionPlan::first();
+
+        return view('restaurant_owner.menu_items.index', compact('menuItems', 'subscriptionExpired', 'subscriptionPlan'));
     }
 
 
@@ -91,13 +100,16 @@ class RestaurantOwnerController extends Controller
     public function menuItemsStore(Request $request)
     {
         $this->authorize('createMenuItem', MenuItem::class);
+
         $validatedData = $request->validate([
             'name' => 'required',
             'description' => 'required',
             'price' => 'required|numeric',
             'menu_id' => 'required',
+            'image' => 'required|image|max:2048', // Ensure the uploaded file is an image and not larger than 2MB
         ]);
 
+        // Create new menu item
         $menuItem = MenuItem::create([
             'name' => $validatedData['name'],
             'description' => $validatedData['description'],
@@ -105,11 +117,20 @@ class RestaurantOwnerController extends Controller
             'menu_id' => $validatedData['menu_id'],
         ]);
 
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            // Add the uploaded image to Spatie Media Library
+            $menuItem->addMediaFromRequest('image')
+                ->toMediaCollection('images');
+        }
+
+        // Dispatch event if needed
         event(new MenuItemAdded($menuItem));
 
-
+        // Redirect with success message
         return redirect()->route('restaurant.menu.index')->with('success', 'Menu item created successfully.');
     }
+
 
     public function menuItemsEdit(MenuItem $menuItem)
     {
@@ -127,67 +148,60 @@ class RestaurantOwnerController extends Controller
             'description' => 'required',
             'price' => 'required|numeric',
             'menu_id' => 'required',
-
+            'image' => 'image|max:2048', // Ensure the uploaded file is an image and not larger than 2MB
         ]);
 
-        // Update the menu item
+        // Update menu item fields
         $menuItem->update([
             'name' => $validatedData['name'],
             'description' => $validatedData['description'],
             'price' => $validatedData['price'],
             'menu_id' => $validatedData['menu_id'],
-
         ]);
 
-        event(new MenuItemEdited($menuItem));
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            // Add the uploaded image to Spatie Media Library
+            $menuItem->addMediaFromRequest('image')
+                ->toMediaCollection('images');
+        }
 
+        // Redirect with success message
         return redirect()->route('restaurant.menu.index')->with('success', 'Menu item updated successfully.');
     }
-
-    public function menuItemsDestroy(Request $request,MenuItem $menuItem)
+    public function menuItemsDestroy(Request $request, MenuItem $menuItem)
     {
         $this->authorize('deleteMenuItem', $menuItem);
         event(new MenuItemDeleted($menuItem));
         $menuItem->forceDelete();
 
-        
+
 
         return redirect()->route('restaurant.menu.index')->with('success', 'Menu item deleted successfully.');
     }
+
     public function menuOperatorIndex()
     {
-        // Authorize the action based on the operator's permissions
         $this->authorize('viewMenus', Auth::user());
 
-        // Get the current authenticated user (operator)
         $operator = Auth::user();
 
-        // Retrieve the associated owner (restaurant owner)
-        $owner = $operator->owner;
+        $owner = $operator->restaurants->first()->owner;
 
-        // Check if the owner exists and has a valid subscription
-        $subscriptionExpired = $owner ? $owner->subscriptionExpired() : true;
+        $subscriptionExpired = optional($owner->subscription_expires_at)->isPast();
 
-        // If the owner exists and has a valid subscription, update the operator's subscription expiration
-        if ($owner && !$subscriptionExpired) {
-            $operator->subscription_expires_at = $owner->subscription_expires_at;
-            $operator->save();
-        }
+        $message = $subscriptionExpired ? "The owner's subscription has ended. Please contact the owner to renew the subscription." : null;
 
-        // Retrieve the menus associated with the operator's owned restaurants
-        $menus = $operator->menus;
+        $menus = $owner->menus;
+        return view('restaurant_owner.operator.menu_index', compact('menus', 'message', 'subscriptionExpired'));
 
-        // Pass the data to the view and render it
-        return view('restaurant_owner.operator.menu_index', compact('menus', 'subscriptionExpired'));
     }
-
-
-
     public function menuIndex()
     {
         $this->authorize('viewMenus', Auth::user());
 
-        $subscriptionExpired = auth()->user()->subscriptionExpired();
+        $owner = auth()->user();
+        $subscriptionExpired = optional($owner->subscription_expires_at)->isPast();
         $menus = Auth::user()->menus;
 
         return view('restaurant_owner.menus.index', compact('menus', 'subscriptionExpired'));
@@ -251,31 +265,20 @@ class RestaurantOwnerController extends Controller
     {
         $user = Auth::user();
         $restaurant = $user->restaurants->first();
-        // dd($restaurant);
 
-        // dd($restaurant);
-        if ($restaurant) {
-            $imageUrl = $restaurant->getFirstMediaUrl('images');
-            $videoUrl = $restaurant->getFirstMediaUrl('videos');
-
-            return view('restaurant_owner.restaurant_profile.edit', compact('restaurant', 'imageUrl'));
-        } else {
-            // User is a restaurant owner but doesn't have a restaurant
-            return view('restaurant_owner.restaurant_profile.create');
-        }
+        return view('restaurant_owner.restaurant_profile.edit', compact('restaurant'));
+    
+        
     }
     public function restaurantStore(Request $request)
     {
         $user = Auth::user();
-
         // Validate the request data
         $request->validate([
             'name' => 'required|string|max:255',
             'address' => 'required|string|max:255',
             'contact_number' => 'required|string|max:20',
             'description' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'video' => 'nullable|file|mimes:mp4,avi,mov,wmv|max:20480',
         ]);
 
         // Create a new restaurant instance
@@ -284,20 +287,13 @@ class RestaurantOwnerController extends Controller
         $restaurant->address = $request->address;
         $restaurant->contact_number = $request->contact_number;
         $restaurant->description = $request->description;
+        $restaurant->owner_id = $user->id;
+
 
         // Save the restaurant
         $user->restaurants()->save($restaurant);
 
-        // Handle file uploads for images
-        if ($request->hasFile('image')) {
-            $restaurant->addMedia($request->file('image'))->toMediaCollection('images');
-        }
-
-        // Handle file uploads for videos
-        if ($request->hasFile('video')) {
-            $restaurant->addMedia($request->file('video'))->toMediaCollection('videos');
-        }
-
+   
         return redirect()->route('restaurant.profile')->with('success', 'Restaurant created successfully.');
     }
 
@@ -310,30 +306,10 @@ class RestaurantOwnerController extends Controller
             'address' => 'required|string|max:255',
             'contact_number' => 'required|string|max:20',
             'description' => 'nullable|string',
-            'image' => 'nullable|image|max:2048',
-            'video' => 'nullable|file|mimetypes:video/*',
         ]);
 
         // Update the restaurant details
         $restaurant->update($validatedData);
-
-        // Handle file uploads for images
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-
-            // Store the image in the 'images' collection
-            $restaurant->clearMediaCollection('images');
-            $restaurant->addMedia($image)->toMediaCollection('images');
-        }
-
-        // Handle file uploads for videos
-        if ($request->hasFile('video')) {
-            $video = $request->file('video');
-
-            // Store the video in the 'videos' collection
-            $restaurant->clearMediaCollection('videos');
-            $restaurant->addMedia($video)->toMediaCollection('videos');
-        }
 
         return redirect()->route('restaurant.profile')->with('success', 'Restaurant updated successfully.');
     }
@@ -344,5 +320,25 @@ class RestaurantOwnerController extends Controller
         $restaurant->delete();
         return redirect()->route('restaurant.profile')->with('success', 'Restaurant deleted successfully.');
     }
+    public function showMenu($slug)
+    {
+        $restaurant = Restaurant::where('slug', $slug)->firstOrFail();
+        // Retrieve the owner of the restaurant
+        $owner = $restaurant->owner;
+
+        // Retrieve all menus associated with the restaurant
+        $userMenus = $owner->menus;
+
+
+
+        $menuItems = collect();
+
+        foreach ($userMenus as $menu) {
+            $menuItems = $menuItems->merge($menu->menuItems);
+        }
+
+        return view('menu', compact('restaurant', 'owner', 'menuItems'));
+    }
+
 
 }

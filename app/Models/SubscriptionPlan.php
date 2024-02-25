@@ -8,8 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class SubscriptionPlan extends Model
 {
     use HasFactory;
-    protected $fillable = ['name', 'price', 'duration_in_days', 'max_qr_scans'];
-    public function users()
+    protected $fillable = [
+        'name',
+        'description',
+        'price',
+        'create_limit',
+        'scan_limit',
+        'dish_creation_limit'
+    ];    public function users()
     {
         return $this->hasMany(User::class);
     }

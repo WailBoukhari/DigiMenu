@@ -29,7 +29,10 @@ use Illuminate\Support\Facades\Mail;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('home');
+});
+Route::get('/menu', function () {
+    return view('menu');
 });
 
 Route::get('/unverified', function () {
@@ -96,6 +99,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/restaurant/profile/update/{restaurant}', [RestaurantOwnerController::class, 'restaurantUpdate'])->name('restaurant.profile.update');
     Route::get('/restaurant/profile/create', [RestaurantOwnerController::class, 'restaurantCreate'])->name('restaurant.profile.create');
     Route::post('/restaurant/profile/store', [RestaurantOwnerController::class, 'restaurantStore'])->name('restaurant.profile.store');
+
+    Route::get('/menu/{restaurant:slug}', [RestaurantOwnerController::class, 'showMenu'])->name('menu');
 
     //sub
     Route::get('/subscribe', [SubscriptionController::class, 'showSubscriptionForm'])->name('subscription.form');

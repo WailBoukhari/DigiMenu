@@ -2,19 +2,34 @@
 
 namespace App\Models;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Spatie\MediaLibrary\HasMedia;
-use Spatie\MediaLibrary\InteractsWithMedia;
-class Restaurant extends Model implements HasMedia
+use Illuminate\Support\Str;
+
+class Restaurant extends Model
 {
-    use HasFactory ,InteractsWithMedia;
+    use HasFactory;
     protected $fillable = [
         'name',
         'address',
         'contact_number',
         'description',
+        'owner_id',
+        'slug',
     ];
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($restaurant) {
+            $restaurant->slug = Str::slug($restaurant->name);
+        });
+
+        static::updating(function ($restaurant) {
+            $restaurant->slug = Str::slug($restaurant->name);
+        });
+    }
     public function owner()
     {
         return $this->belongsTo(User::class, 'owner_id');
@@ -24,9 +39,9 @@ class Restaurant extends Model implements HasMedia
     {
         return $this->belongsToMany(User::class, 'operator_restaurant', 'restaurant_id', 'operator_id');
     }
-    public function registerMediaCollections(): void
+
+    public function getRouteKeyName()
     {
-        $this->addMediaCollection('images');
-        $this->addMediaCollection('videos');
+        return 'slug';
     }
 }

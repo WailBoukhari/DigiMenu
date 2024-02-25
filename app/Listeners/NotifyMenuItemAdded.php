@@ -20,13 +20,19 @@ class NotifyMenuItemAdded implements ShouldQueue
 
         $restaurant = $menuItem->menu->restaurant;
 
-        $recipients = collect([$restaurant->owner]);
+        $owner = $restaurant->owner;
 
-        $recipients = $recipients->merge($restaurant->operators);
+        if ($owner) {
+            $owner->notify(new MenuItemAddedNotification($menuItem));
+        }
 
-        $recipients->each(function ($recipient) use ($menuItem) {
-            $recipient->notify(new MenuItemAddedNotification($menuItem));
-        });
+        $operators = $restaurant->operators;
+
+        foreach ($operators as $operator) {
+            if ($operator) {
+                $operator->notify(new MenuItemAddedNotification($menuItem));
+            }
+        }
     }
 
 }

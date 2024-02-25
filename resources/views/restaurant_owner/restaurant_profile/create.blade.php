@@ -36,18 +36,6 @@
                             <textarea id="description" class="block w-full mt-1 py-2 px-3 bg-gray-700 dark:bg-gray-600 border border-gray-600 dark:border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 dark:text-gray-300 rounded-md" name="description" rows="4" required>{{ old('description') }}</textarea>
                         </div>
 
-                        <!-- Image -->
-                        <div class="mt-4">
-                            <label for="image" class="block font-medium text-sm text-gray-300 dark:text-gray-400">{{ __('Image') }}</label>
-                            <input id="image" class="block w-full mt-1 py-2 px-3 bg-gray-700 dark:bg-gray-600 border border-gray-600 dark:border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 dark:text-gray-300 rounded-md" type="file" name="image" accept="image/*" />
-                        </div>
-
-                        <!-- Video -->
-                        <div class="mt-4">
-                            <label for="video" class="block font-medium text-sm text-gray-300 dark:text-gray-400">{{ __('Video') }}</label>
-                            <input id="video" class="block w-full mt-1 py-2 px-3 bg-gray-700 dark:bg-gray-600 border border-gray-600 dark:border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 dark:text-gray-300 rounded-md" type="file" name="video" accept="video/*" />
-                        </div>
-
                         <!-- Submit Button -->
                         <div class="flex items-center justify-end mt-4">
                             <button type="submit" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md">{{ __('Create') }}</button>

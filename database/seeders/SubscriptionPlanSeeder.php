@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\SubscriptionPlan;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class SubscriptionPlanSeeder extends Seeder
@@ -17,7 +16,7 @@ class SubscriptionPlanSeeder extends Seeder
             'name' => 'Basic',
             'description' => 'Basic subscription plan',
             'price' => 9.99,
-            'create_limit' => 10,
+            'dish_creation_limit' => 10,
             'scan_limit' => 100,
         ]);
 
@@ -25,7 +24,7 @@ class SubscriptionPlanSeeder extends Seeder
             'name' => 'Standard',
             'description' => 'Standard subscription plan',
             'price' => 19.99,
-            'create_limit' => 20,
+            'dish_creation_limit' => 20,
             'scan_limit' => 200,
         ]);
 
@@ -33,7 +32,7 @@ class SubscriptionPlanSeeder extends Seeder
             'name' => 'Premium',
             'description' => 'Premium subscription plan',
             'price' => 29.99,
-            'create_limit' => 30,
+            'dish_creation_limit' => 30,
             'scan_limit' => 300,
         ]);
     }

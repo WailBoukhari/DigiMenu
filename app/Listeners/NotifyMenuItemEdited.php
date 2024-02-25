@@ -11,11 +11,21 @@ class NotifyMenuItemEdited implements ShouldQueue
     public function handle(MenuItemEdited $event)
     {
         $menuItem = $event->menuItem;
-        $restaurant = $menuItem->menu->restaurant;
-        $recipients = collect([$restaurant->owner])->merge($restaurant->operators);
 
-        $recipients->each(function ($recipient) use ($menuItem) {
-            $recipient->notify(new MenuItemEditedNotification($menuItem));
-        });
+        $restaurant = $menuItem->menu->restaurant;
+
+        $owner = $restaurant->owner;
+
+        if ($owner) {
+            $owner->notify(new MenuItemEditedNotification($menuItem));
+        }
+
+        $operators = $restaurant->operators;
+
+        foreach ($operators as $operator) {
+            if ($operator) {
+                $operator->notify(new MenuItemEditedNotification($menuItem));
+            }
+        }
     }
 }

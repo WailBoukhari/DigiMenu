@@ -54,12 +54,12 @@ class AdminController extends Controller
         // Detach the operator role
         $operator->removeRole('operator');
 
-        // Remove the association with the restaurant by setting restaurant_id to null
-        $operator->restaurant_id = null;
-        $operator->save();
+        // Remove the association with any restaurant
+        $operator->restaurants()->detach();
 
         return redirect()->back()->with('success', 'Operator role removed successfully.');
     }
+
     public function manageOperators()
     {
         $this->authorize('manageUsers', User::class);
@@ -135,16 +135,17 @@ class AdminController extends Controller
     // Store a new subscription plan
     public function storeSubscribers(Request $request)
     {
-        // Validation
         $validatedData = $request->validate([
             'name' => 'required',
-            // Add more validation rules as needed
+            'description' => 'nullable',
+            'price' => 'required|numeric|min:0',
+            'scan_limit' => 'nullable|integer|min:0',
+            'dish_creation_limit' => 'nullable|integer|min:0',
         ]);
 
-        // Create new subscription plan
         SubscriptionPlan::create($validatedData);
 
-        return redirect()->route('subscription-plans.index')->with('success', 'Subscription plan created successfully.');
+        return redirect()->route('subscription.index')->with('success', 'Subscription plan created successfully.');
     }
 
     // Show the form to edit a subscription plan
@@ -157,16 +158,18 @@ class AdminController extends Controller
     // Update a subscription plan
     public function updateSubscribers(Request $request, $id)
     {
-        // Validation
         $validatedData = $request->validate([
             'name' => 'required',
-            // Add more validation rules as needed
+            'description' => 'nullable',
+            'price' => 'required|numeric|min:0',
+            'scan_limit' => 'nullable|integer|min:0',
+            'dish_creation_limit' => 'nullable|integer|min:0',
         ]);
 
-        // Update subscription plan
         $subscriptionPlan = SubscriptionPlan::findOrFail($id);
         $subscriptionPlan->update($validatedData);
 
         return redirect()->route('admin.subscribers.index')->with('success', 'Subscription plan updated successfully.');
     }
+
 }

@@ -72,23 +72,6 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsTo(SubscriptionPlan::class);
     }
 
-    public function subscriptionExpired(): bool
-    {
-        // Retrieve the user's subscription plan
-        $subscriptionPlan = $this->subscriptionPlan;
-
-        if (!$subscriptionPlan) {
-            // User has no subscription plan
-            return true;
-        }
-
-        // Retrieve the expiration date of the subscription
-        $expirationDate = $this->subscription_expires_at;
-
-        // Check if the expiration date has passed
-        return Carbon::now()->greaterThan($expirationDate);
-    }
-
     public function menus(): HasMany
     {
         return $this->hasMany(Menu::class);

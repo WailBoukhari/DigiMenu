@@ -45,46 +45,6 @@
                             <textarea id="description" class="block w-full mt-1 py-2 px-3 bg-gray-700 dark:bg-gray-600 border border-gray-600 dark:border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 dark:text-gray-300 rounded-md" name="description" rows="4">{{ $restaurant->description }}</textarea>
                         </div>
 
-                        <!-- Image Display -->
-                        <div class="mt-4">
-                            @if ($imageUrl)
-                                <img src="{{ $imageUrl }}" alt="Restaurant Image" class="max-w-full mt-2">
-                            @else
-                                <p class="text-sm text-gray-300 dark:text-gray-400">No image available</p>
-                            @endif
-                        </div>
-
-                        <!-- Image Upload -->
-                        <div class="mt-4">
-                            <label for="image"
-                                class="block text-sm font-medium text-gray-300 dark:text-gray-400">{{ __('Image') }}</label>
-                            <input id="image" class="block w-full mt-1 py-2 px-3 bg-gray-700 dark:bg-gray-600 border border-gray-600 dark:border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 dark:text-gray-300 rounded-md" type="file" name="image"
-                                accept="image/*" />
-                        </div>
-
-                        <!-- Video Display -->
-                        <div class="mt-4">
-                            <label for="video"
-                                class="block text-sm font-medium text-gray-300 dark:text-gray-400">{{ __('Video') }}</label>
-                            @if ($restaurant->getFirstMedia('videos'))
-                                <video controls class="block mt-2 w-full" poster="{{ $imageUrl }}">
-                                    <source src="{{ $restaurant->getFirstMedia('videos')->getUrl() }}"
-                                        type="{{ $restaurant->getFirstMedia('videos')->mime_type }}">
-                                    Your browser does not support the video tag.
-                                </video>
-                            @else
-                                <p class="text-sm text-gray-300 dark:text-gray-400">No video uploaded</p>
-                            @endif
-                        </div>
-
-                        <!-- Video Upload -->
-                        <div class="mt-4">
-                            <label for="video"
-                                class="block text-sm font-medium text-gray-300 dark:text-gray-400">{{ __('Video Upload') }}</label>
-                            <input id="video" class="block w-full mt-1 py-2 px-3 bg-gray-700 dark:bg-gray-600 border border-gray-600 dark:border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 dark:text-gray-300 rounded-md" type="file" name="video"
-                                accept="video/*" />
-                        </div>
-
                         <!-- Submit Button -->
                         <div class="mt-8 flex items-center justify-end">
                             <button type="submit"

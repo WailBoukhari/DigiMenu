@@ -4,7 +4,7 @@
             <div class="bg-gray-900 dark:bg-gray-800 overflow-hidden shadow sm:rounded-lg">
                 <div class="p-6 bg-gray-900 dark:bg-gray-800 border-b border-gray-700 dark:border-gray-600">
                     <h1 class="text-2xl mb-4 text-gray-200 dark:text-gray-300">Add New Menu Item</h1>
-                    <form action="{{ route('restaurant.menu.store') }}" method="POST">
+                    <form action="{{ route('restaurant.menu.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="mb-4">
                             <label for="name" class="block text-sm font-bold mb-2 text-gray-300 dark:text-gray-400">Name</label>
@@ -26,6 +26,11 @@
                                     <option value="{{ $menu->id }}">{{ $menu->name }}</option>
                                 @endforeach
                             </select>
+                        </div>
+                        <div class="mb-4">
+                            <label for="image" class="block text-sm font-bold mb-2 text-gray-300 dark:text-gray-400">Image</label>
+                             <input type="file" id="image" name="image"
+                                class="appearance-none border rounded w-full py-2 px-3 text-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-400 leading-tight focus:outline-none focus:shadow-outline">
                         </div>
                         <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Submit</button>
                     </form>

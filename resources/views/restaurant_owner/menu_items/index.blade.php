@@ -14,7 +14,7 @@
                     <span class="block sm:inline">Please renew your subscription to continue.</span>
                     <a href="{{ route('subscription.form') }}"
                         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-block mt-3">Renew
-                        Subscription</a> 
+                        Subscription</a>
                 </div>
             @else
                 <div class="bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
@@ -22,26 +22,37 @@
                         <div class="flex justify-end mb-4">
                             <!-- Add New Menu Item button -->
                             <a href="{{ route('restaurant.menu.create') }}"
-                                class="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded">Add New
-                                Menu Item</a>
+                                @if ($menuItems->count() >= $subscriptionPlan->dish_creation_limit) disabled
+            onclick="return false;"
+            class="bg-blue-600 opacity-50 cursor-not-allowed text-white font-bold py-2 px-4 rounded"
+        @else
+            class="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded" @endif>
+                                Add New Menu Item
+                            </a>
                         </div>
+
                         <div class="overflow-x-auto">
                             <table class="w-full">
                                 <thead>
                                     <tr>
-                                        <th class="px-6 py-3 bg-gray-600 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">
+                                        <th
+                                            class="px-6 py-3 bg-gray-600 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">
                                             Name
                                         </th>
-                                        <th class="px-6 py-3 bg-gray-600 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">
+                                        <th
+                                            class="px-6 py-3 bg-gray-600 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">
                                             Description
                                         </th>
-                                        <th class="px-6 py-3 bg-gray-600 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">
+                                        <th
+                                            class="px-6 py-3 bg-gray-600 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">
                                             Price
                                         </th>
-                                        <th class="px-6 py-3 bg-gray-600 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">
+                                        <th
+                                            class="px-6 py-3 bg-gray-600 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">
                                             Menu
                                         </th>
-                                        <th class="px-6 py-3 bg-gray-600 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">
+                                        <th
+                                            class="px-6 py-3 bg-gray-600 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">
                                             Actions
                                         </th>
                                     </tr>
