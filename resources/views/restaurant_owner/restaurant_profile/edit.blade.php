@@ -1,14 +1,14 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+        <h2 class="font-semibold text-xl text-gray-200 dark:text-gray-800 leading-tight">
             {{ __('Edit Restaurant') }}
         </h2>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-700 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 bg-white dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
+    <div class="py-8">
+        <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-gray-900 dark:bg-gray-800 overflow-hidden shadow sm:rounded-lg">
+                <div class="p-6 bg-gray-800 dark:bg-gray-700 border-b border-gray-700 dark:border-gray-600">
                     <form method="POST" action="{{ route('restaurant.profile.update', $restaurant->id) }}"
                         enctype="multipart/form-data">
                         @csrf
@@ -17,75 +17,78 @@
                         <!-- Restaurant Name -->
                         <div class="mt-4">
                             <label for="name"
-                                class="block font-medium text-sm text-gray-700 dark:text-gray-300">{{ __('Restaurant Name') }}</label>
-                            <input id="name" class="block mt-1 w-full" type="text" name="name"
+                                class="block text-sm font-medium text-gray-300 dark:text-gray-400">{{ __('Restaurant Name') }}</label>
+                            <input id="name" class="block w-full mt-1 py-2 px-3 bg-gray-700 dark:bg-gray-600 border border-gray-600 dark:border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 dark:text-gray-300 rounded-md" type="text" name="name"
                                 value="{{ $restaurant->name }}" required autofocus />
                         </div>
 
                         <!-- Address -->
                         <div class="mt-4">
                             <label for="address"
-                                class="block font-medium text-sm text-gray-700 dark:text-gray-300">{{ __('Address') }}</label>
-                            <input id="address" class="block mt-1 w-full" type="text" name="address"
+                                class="block text-sm font-medium text-gray-300 dark:text-gray-400">{{ __('Address') }}</label>
+                            <input id="address" class="block w-full mt-1 py-2 px-3 bg-gray-700 dark:bg-gray-600 border border-gray-600 dark:border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 dark:text-gray-300 rounded-md" type="text" name="address"
                                 value="{{ $restaurant->address }}" required />
                         </div>
 
                         <!-- Contact Number -->
                         <div class="mt-4">
                             <label for="contact_number"
-                                class="block font-medium text-sm text-gray-700 dark:text-gray-300">{{ __('Contact Number') }}</label>
-                            <input id="contact_number" class="block mt-1 w-full" type="tel" name="contact_number"
+                                class="block text-sm font-medium text-gray-300 dark:text-gray-400">{{ __('Contact Number') }}</label>
+                            <input id="contact_number" class="block w-full mt-1 py-2 px-3 bg-gray-700 dark:bg-gray-600 border border-gray-600 dark:border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 dark:text-gray-300 rounded-md" type="tel" name="contact_number"
                                 value="{{ $restaurant->contact_number }}" required />
                         </div>
 
                         <!-- Description -->
                         <div class="mt-4">
                             <label for="description"
-                                class="block font-medium text-sm text-gray-700 dark:text-gray-300">{{ __('Description') }}</label>
-                            <textarea id="description" class="block mt-1 w-full" name="description" rows="4">{{ $restaurant->description }}</textarea>
+                                class="block text-sm font-medium text-gray-300 dark:text-gray-400">{{ __('Description') }}</label>
+                            <textarea id="description" class="block w-full mt-1 py-2 px-3 bg-gray-700 dark:bg-gray-600 border border-gray-600 dark:border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 dark:text-gray-300 rounded-md" name="description" rows="4">{{ $restaurant->description }}</textarea>
                         </div>
+
                         <!-- Image Display -->
                         <div class="mt-4">
                             @if ($imageUrl)
-                                <img src="{{ $imageUrl }}" alt="Restaurant Image">
+                                <img src="{{ $imageUrl }}" alt="Restaurant Image" class="max-w-full mt-2">
                             @else
-                                <p>No image available</p>
+                                <p class="text-sm text-gray-300 dark:text-gray-400">No image available</p>
                             @endif
                         </div>
+
                         <!-- Image Upload -->
                         <div class="mt-4">
                             <label for="image"
-                                class="block font-medium text-sm text-gray-700 dark:text-gray-300">{{ __('Image') }}</label>
-                            <input id="image" class="block mt-1 w-full" type="file" name="image"
+                                class="block text-sm font-medium text-gray-300 dark:text-gray-400">{{ __('Image') }}</label>
+                            <input id="image" class="block w-full mt-1 py-2 px-3 bg-gray-700 dark:bg-gray-600 border border-gray-600 dark:border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 dark:text-gray-300 rounded-md" type="file" name="image"
                                 accept="image/*" />
                         </div>
+
                         <!-- Video Display -->
                         <div class="mt-4">
-                            <label
-                                class="block font-medium text-sm text-gray-700 dark:text-gray-300">{{ __('Video') }}</label>
+                            <label for="video"
+                                class="block text-sm font-medium text-gray-300 dark:text-gray-400">{{ __('Video') }}</label>
                             @if ($restaurant->getFirstMedia('videos'))
-                                <video controls class="block mt-1 w-full">
+                                <video controls class="block mt-2 w-full" poster="{{ $imageUrl }}">
                                     <source src="{{ $restaurant->getFirstMedia('videos')->getUrl() }}"
                                         type="{{ $restaurant->getFirstMedia('videos')->mime_type }}">
                                     Your browser does not support the video tag.
                                 </video>
                             @else
-                                <p>No video uploaded</p>
+                                <p class="text-sm text-gray-300 dark:text-gray-400">No video uploaded</p>
                             @endif
                         </div>
+
                         <!-- Video Upload -->
                         <div class="mt-4">
                             <label for="video"
-                                class="block font-medium text-sm text-gray-700 dark:text-gray-300">{{ __('Video') }}</label>
-                            <input id="video" class="block mt-1 w-full" type="file" name="video"
+                                class="block text-sm font-medium text-gray-300 dark:text-gray-400">{{ __('Video Upload') }}</label>
+                            <input id="video" class="block w-full mt-1 py-2 px-3 bg-gray-700 dark:bg-gray-600 border border-gray-600 dark:border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 dark:text-gray-300 rounded-md" type="file" name="video"
                                 accept="video/*" />
                         </div>
 
-                        <!-- Other form fields for editing restaurant details -->
-
-                        <div class="flex items-center justify-end mt-4">
+                        <!-- Submit Button -->
+                        <div class="mt-8 flex items-center justify-end">
                             <button type="submit"
-                                class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">{{ __('Update') }}</button>
+                                class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md">{{ __('Update') }}</button>
                         </div>
                     </form>
                 </div>

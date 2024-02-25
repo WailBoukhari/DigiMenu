@@ -33,6 +33,11 @@
                     </div>
                 </div>
                 <div class="p-6 sm:px-20 bg-white dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
+                        <div class="mb-4">
+                        <a href="{{ route('admin.users.create') }}" class="bg-green-500 dark:bg-green-700 hover:bg-green-600 dark:hover:bg-green-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                            Add User
+                        </a>
+                    </div>
                     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-800">
                         <thead class="bg-gray-50 dark:bg-gray-800">
                             <tr>
@@ -70,6 +75,18 @@
                                         <button onclick="openModal('{{ $user->id }}')" class="bg-blue-500 dark:bg-blue-700 hover:bg-blue-600 dark:hover:bg-blue-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                                             Make Operator
                                         </button>
+                                        <!-- Edit Button -->
+                                        <a href="{{ route('admin.users.edit', $user->id) }}" class="bg-yellow-500 dark:bg-yellow-700 hover:bg-yellow-600 dark:hover:bg-yellow-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                                            Edit
+                                        </a>
+                                        <!-- Delete Button -->
+                                        <form action="{{ route('admin.users.edit', $user->id) }}" method="POST" style="display: inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="bg-red-500 dark:bg-red-700 hover:bg-red-600 dark:hover:bg-red-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                                                Delete
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
                             @endforeach

@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MenuItemAdded;
+use App\Events\MenuItemDeleted;
+use App\Events\MenuItemEdited;
 use App\Http\Controllers\Controller;
 use App\Models\Menu;
 use App\Models\MenuItem;
@@ -44,10 +47,18 @@ class RestaurantOwnerController extends Controller
 
     public function menuItemOperatorIndex()
     {
+
         $this->authorize('viewMenuItems', Auth::user());
 
         $subscriptionExpired = auth()->user()->subscriptionExpired();
-        $menuItems = $subscriptionExpired ? collect() : MenuItem::all();
+
+        $userMenus = auth()->user()->menus;
+
+        $menuItems = collect();
+
+        foreach ($userMenus as $menu) {
+            $menuItems = $menuItems->merge($menu->menuItems);
+        }
 
         return view('restaurant_owner.operator.menu_items_index', compact('menuItems', 'subscriptionExpired'));
     }
@@ -56,10 +67,18 @@ class RestaurantOwnerController extends Controller
         $this->authorize('viewMenuItems', Auth::user());
 
         $subscriptionExpired = auth()->user()->subscriptionExpired();
-        $menuItems = $subscriptionExpired ? collect() : MenuItem::all();
+
+        $userMenus = auth()->user()->menus;
+
+        $menuItems = collect();
+
+        foreach ($userMenus as $menu) {
+            $menuItems = $menuItems->merge($menu->menuItems);
+        }
 
         return view('restaurant_owner.menu_items.index', compact('menuItems', 'subscriptionExpired'));
     }
+
 
     public function menuItemsCreate()
     {
@@ -72,7 +91,6 @@ class RestaurantOwnerController extends Controller
     public function menuItemsStore(Request $request)
     {
         $this->authorize('createMenuItem', MenuItem::class);
-
         $validatedData = $request->validate([
             'name' => 'required',
             'description' => 'required',
@@ -80,16 +98,24 @@ class RestaurantOwnerController extends Controller
             'menu_id' => 'required',
         ]);
 
-        MenuItem::create($validatedData);
+        $menuItem = MenuItem::create([
+            'name' => $validatedData['name'],
+            'description' => $validatedData['description'],
+            'price' => $validatedData['price'],
+            'menu_id' => $validatedData['menu_id'],
+        ]);
 
-        return redirect()->route('restaurant.menus.index')->with('success', 'Menu item created successfully.');
+        event(new MenuItemAdded($menuItem));
+
+
+        return redirect()->route('restaurant.menu.index')->with('success', 'Menu item created successfully.');
     }
 
     public function menuItemsEdit(MenuItem $menuItem)
     {
         $this->authorize('editMenuItem', $menuItem);
-
-        return view('restaurant_owner.menu_items.edit', compact('menuItem'));
+        $menus = auth()->user()->menus;
+        return view('restaurant_owner.menu_items.edit', compact('menuItem', 'menus'));
     }
 
     public function menuItemsUpdate(Request $request, MenuItem $menuItem)
@@ -100,30 +126,62 @@ class RestaurantOwnerController extends Controller
             'name' => 'required',
             'description' => 'required',
             'price' => 'required|numeric',
+            'menu_id' => 'required',
+
         ]);
 
-        $menuItem->update($validatedData);
+        // Update the menu item
+        $menuItem->update([
+            'name' => $validatedData['name'],
+            'description' => $validatedData['description'],
+            'price' => $validatedData['price'],
+            'menu_id' => $validatedData['menu_id'],
 
-        return redirect()->route('restaurant.menus.index')->with('success', 'Menu item updated successfully.');
+        ]);
+
+        event(new MenuItemEdited($menuItem));
+
+        return redirect()->route('restaurant.menu.index')->with('success', 'Menu item updated successfully.');
     }
 
-    public function menuItemsDestroy(MenuItem $menuItem)
+    public function menuItemsDestroy(Request $request,MenuItem $menuItem)
     {
         $this->authorize('deleteMenuItem', $menuItem);
-
+        event(new MenuItemDeleted($menuItem));
         $menuItem->forceDelete();
-        return redirect()->route('restaurant.menus.index')->with('success', 'Menu item deleted successfully.');
+
+        
+
+        return redirect()->route('restaurant.menu.index')->with('success', 'Menu item deleted successfully.');
     }
     public function menuOperatorIndex()
     {
+        // Authorize the action based on the operator's permissions
         $this->authorize('viewMenus', Auth::user());
 
-        $owner = Auth::user()->owner;
-        $subscriptionExpired = $owner ? $owner->subscriptionExpired() : true;
-        $menus = $owner ? $owner->menus : [];
+        // Get the current authenticated user (operator)
+        $operator = Auth::user();
 
+        // Retrieve the associated owner (restaurant owner)
+        $owner = $operator->owner;
+
+        // Check if the owner exists and has a valid subscription
+        $subscriptionExpired = $owner ? $owner->subscriptionExpired() : true;
+
+        // If the owner exists and has a valid subscription, update the operator's subscription expiration
+        if ($owner && !$subscriptionExpired) {
+            $operator->subscription_expires_at = $owner->subscription_expires_at;
+            $operator->save();
+        }
+
+        // Retrieve the menus associated with the operator's owned restaurants
+        $menus = $operator->menus;
+
+        // Pass the data to the view and render it
         return view('restaurant_owner.operator.menu_index', compact('menus', 'subscriptionExpired'));
     }
+
+
 
     public function menuIndex()
     {
@@ -138,7 +196,6 @@ class RestaurantOwnerController extends Controller
     public function menuCreate()
     {
         $this->authorize('createMenu', Menu::class);
-
         return view('restaurant_owner.menus.create');
     }
 
@@ -152,7 +209,7 @@ class RestaurantOwnerController extends Controller
 
         $user = Auth::user();
         $restaurant = $user->restaurants->first();
-      
+
         $menu = new Menu();
         $menu->name = $request->name;
         $menu->user_id = $user->id;
@@ -200,11 +257,8 @@ class RestaurantOwnerController extends Controller
         if ($restaurant) {
             $imageUrl = $restaurant->getFirstMediaUrl('images');
             $videoUrl = $restaurant->getFirstMediaUrl('videos');
-            // $media = $restaurant->getMedia('images');
-            // dd($media);
-            // dd($imageUrl);
 
-            return view('restaurant_owner.restaurant_profile.edit', compact('restaurant' , 'imageUrl'));
+            return view('restaurant_owner.restaurant_profile.edit', compact('restaurant', 'imageUrl'));
         } else {
             // User is a restaurant owner but doesn't have a restaurant
             return view('restaurant_owner.restaurant_profile.create');
@@ -291,24 +345,4 @@ class RestaurantOwnerController extends Controller
         return redirect()->route('restaurant.profile')->with('success', 'Restaurant deleted successfully.');
     }
 
-}
-function compute($paris, $newyork, $london)
-{
-    // Calculate the total minutes difference between Paris and New York
-    $paris_minutes = $paris->hours * 60 + $paris->minutes;
-    $newyork_minutes = $newyork->hours * 60 + $newyork->minutes;
-    $paris_newyork_difference = abs($paris_minutes - $newyork_minutes);
-
-    // Calculate the total minutes difference between Paris and London
-    $london_minutes = $london->hours * 60 + $london->minutes;
-    $paris_london_difference = abs($paris_minutes - $london_minutes);
-
-    // Calculate the total minutes difference between New York and London
-    $newyork_london_difference = abs($newyork_minutes - $london_minutes);
-
-    // Find the maximum difference among the three
-    $max_difference = max($paris_newyork_difference, $paris_london_difference, $newyork_london_difference);
-
-    // Return the maximum difference
-    return $max_difference;
 }

@@ -34,11 +34,6 @@
                             {{ __('Manage Subscribers') }}
                         </x-nav-link>
                     </div>
-                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                        <x-nav-link :href="route('admin.restaurant_owners.index')" :active="request()->routeIs('admin.restaurant_owners.index')">
-                            {{ __('Manage Restaurant Owners') }}
-                        </x-nav-link>
-                    </div>
                 @endrole
                 @role('restaurant_owner')
                     <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">

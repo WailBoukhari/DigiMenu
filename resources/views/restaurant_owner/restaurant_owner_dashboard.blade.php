@@ -10,7 +10,7 @@
             <div class="bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6">
                     <h2 class="text-lg font-semibold mb-2 text-gray-200">User Dashboard</h2>
-                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                    <div class="bg-gray-700 overflow-hidden shadow-sm sm:rounded-lg">
                         <div class="p-6">
                             @if ($hasSubscription)
                                 <div>
@@ -23,7 +23,7 @@
                                     <div class="bg-red-700 border border-red-900 text-red-100 px-4 py-3 rounded relative" role="alert">
                                         <strong class="font-bold">Alert!</strong>
                                         <span class="block sm:inline"> Your subscription has ended. Please renew your subscription to continue accessing this feature.</span>
-                                        <a href="{{ route('subscription.form') }}" class="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Renew Subscription</a>
+                                        <a href="{{ route('subscription.form') }}" class="mt-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Renew Subscription</a>
                                     </div>
                                 @else
                                     <div class="mt-4">

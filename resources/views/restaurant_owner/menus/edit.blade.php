@@ -9,7 +9,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-700 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
-                    <form action="{{ route('restaurant.menu.update', $menu->id) }}" method="POST">
+                    <form action="{{ route('restaurant.menus.update', $menu->id) }}" method="POST">
                         @csrf
                         @method('PUT')
                         <div class="mb-4">

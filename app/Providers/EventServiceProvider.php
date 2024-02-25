@@ -2,10 +2,15 @@
 
 namespace App\Providers;
 
+use App\Events\MenuItemAdded;
+use App\Events\MenuItemDeleted;
+use App\Events\MenuItemEdited;
+use App\Listeners\NotifyMenuItemAdded;
+use App\Listeners\NotifyMenuItemDeleted;
+use App\Listeners\NotifyMenuItemEdited;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -17,6 +22,15 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         Registered::class => [
             SendEmailVerificationNotification::class,
+        ],
+        MenuItemAdded::class => [
+            NotifyMenuItemAdded::class,
+        ],
+        MenuItemEdited::class => [
+            NotifyMenuItemEdited::class,
+        ],
+        MenuItemDeleted::class => [
+            NotifyMenuItemDeleted::class,
         ],
     ];
 

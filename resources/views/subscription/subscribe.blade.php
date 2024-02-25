@@ -1,4 +1,3 @@
-<!-- resources/views/plan/select.blade.php -->
 
 <x-app-layout>
     <x-slot name="header">

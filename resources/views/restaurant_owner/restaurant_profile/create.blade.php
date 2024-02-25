@@ -1,39 +1,56 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+        <h2 class="font-semibold text-xl text-gray-200 dark:text-gray-800 leading-tight">
             {{ __('Create Restaurant') }}
         </h2>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-700 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 bg-white dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
-                    <form method="POST" action="{{ route('restaurant.profile.store') }}">
+    <div class="py-8">
+        <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-gray-900 dark:bg-gray-800 overflow-hidden shadow sm:rounded-lg">
+                <div class="p-6 bg-gray-900 dark:bg-gray-800 border-b border-gray-700 dark:border-gray-600">
+                    <form method="POST" action="{{ route('restaurant.profile.store') }}" enctype="multipart/form-data">
                         @csrf
 
                         <!-- Restaurant Name -->
                         <div class="mt-4">
-                            <label for="name" class="block font-medium text-sm text-gray-700 dark:text-gray-300">{{ __('Restaurant Name') }}</label>
-                            <input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus />
+                            <label for="name" class="block font-medium text-sm text-gray-300 dark:text-gray-400">{{ __('Restaurant Name') }}</label>
+                            <input id="name" class="block w-full mt-1 py-2 px-3 bg-gray-700 dark:bg-gray-600 border border-gray-600 dark:border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 dark:text-gray-300 rounded-md" type="text" name="name" :value="old('name')" required autofocus />
                         </div>
 
                         <!-- Address -->
                         <div class="mt-4">
-                            <label for="address" class="block font-medium text-sm text-gray-700 dark:text-gray-300">{{ __('Address') }}</label>
-                            <input id="address" class="block mt-1 w-full" type="text" name="address" :value="old('address')" required />
+                            <label for="address" class="block font-medium text-sm text-gray-300 dark:text-gray-400">{{ __('Address') }}</label>
+                            <input id="address" class="block w-full mt-1 py-2 px-3 bg-gray-700 dark:bg-gray-600 border border-gray-600 dark:border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 dark:text-gray-300 rounded-md" type="text" name="address" :value="old('address')" required />
                         </div>
 
                         <!-- Contact Number -->
                         <div class="mt-4">
-                            <label for="contact_number" class="block font-medium text-sm text-gray-700 dark:text-gray-300">{{ __('Contact Number') }}</label>
-                            <input id="contact_number" class="block mt-1 w-full" type="tel" name="contact_number" :value="old('contact_number')" required />
+                            <label for="contact_number" class="block font-medium text-sm text-gray-300 dark:text-gray-400">{{ __('Contact Number') }}</label>
+                            <input id="contact_number" class="block w-full mt-1 py-2 px-3 bg-gray-700 dark:bg-gray-600 border border-gray-600 dark:border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 dark:text-gray-300 rounded-md" type="tel" name="contact_number" :value="old('contact_number')" required />
                         </div>
 
-                        <!-- Other form fields for restaurant details -->
+                        <!-- Description -->
+                        <div class="mt-4">
+                            <label for="description" class="block font-medium text-sm text-gray-300 dark:text-gray-400">{{ __('Description') }}</label>
+                            <textarea id="description" class="block w-full mt-1 py-2 px-3 bg-gray-700 dark:bg-gray-600 border border-gray-600 dark:border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 dark:text-gray-300 rounded-md" name="description" rows="4" required>{{ old('description') }}</textarea>
+                        </div>
 
+                        <!-- Image -->
+                        <div class="mt-4">
+                            <label for="image" class="block font-medium text-sm text-gray-300 dark:text-gray-400">{{ __('Image') }}</label>
+                            <input id="image" class="block w-full mt-1 py-2 px-3 bg-gray-700 dark:bg-gray-600 border border-gray-600 dark:border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 dark:text-gray-300 rounded-md" type="file" name="image" accept="image/*" />
+                        </div>
+
+                        <!-- Video -->
+                        <div class="mt-4">
+                            <label for="video" class="block font-medium text-sm text-gray-300 dark:text-gray-400">{{ __('Video') }}</label>
+                            <input id="video" class="block w-full mt-1 py-2 px-3 bg-gray-700 dark:bg-gray-600 border border-gray-600 dark:border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 dark:text-gray-300 rounded-md" type="file" name="video" accept="video/*" />
+                        </div>
+
+                        <!-- Submit Button -->
                         <div class="flex items-center justify-end mt-4">
-                            <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">{{ __('Create') }}</button>
+                            <button type="submit" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md">{{ __('Create') }}</button>
                         </div>
                     </form>
                 </div>

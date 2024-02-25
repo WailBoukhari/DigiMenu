@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-2xl text-gray-300 leading-tight">
+        <h2 class="font-semibold text-xl text-gray-300 leading-tight">
             {{ __('Operator Menus') }}
         </h2>
     </x-slot>
@@ -38,7 +38,7 @@
                                     </tr>
                                 </thead>
                                 <tbody class="bg-gray-800 divide-y divide-gray-600">
-                                    @foreach ($menus as $menu)
+                                    @forelse ($menus as $menu)
                                         <tr>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                                                 {{ $menu->name }}
@@ -57,7 +57,13 @@
                                                 </form>
                                             </td>
                                         </tr>
-                                    @endforeach
+                                    @empty
+                                        <tr>
+                                            <td colspan="2" class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
+                                                No menus found.
+                                            </td>
+                                        </tr>
+                                    @endforelse
                                 </tbody>
                             </table>
                         </div>
