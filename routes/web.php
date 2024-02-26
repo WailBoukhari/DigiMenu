@@ -6,6 +6,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RestaurantOwnerController;
 use App\Http\Controllers\SubscriptionController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\QrCodeController;
 
 
 
@@ -50,6 +51,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/remove-operator-role/{id}', [AdminController::class, 'removeOperatorRole'])->name('remove.operator.role');
     Route::post('/make-operator/{user}', [AdminController::class, 'makeOperator'])->name('make.operator');
     Route::get('/restaurant_owner/dashboard', [RestaurantOwnerController::class, 'dashboard'])->name('restaurant_owner.dashboard');
+    Route::get('/restaurant/menus/{meniId}/qrcode', [QrCodeController::class, 'generateQrCode']);
+
+
 
     Route::get('/restaurant/menu', [RestaurantOwnerController::class, 'menuItemsIndex'])->name('restaurant.menu.index');
     Route::get('/restaurant/menu/create', [RestaurantOwnerController::class, 'menuItemsCreate'])->name('restaurant.menu.create');

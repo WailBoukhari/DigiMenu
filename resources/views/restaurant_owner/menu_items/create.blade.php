@@ -29,6 +29,15 @@
         <option value="{{ $menu->id }}">{{ $menu->name }}</option>
     @endforeach
 </select>
+<div class="form-group">
+    <label for="category">Category:</label>
+    <select name="category" id="category" class="form-control">
+        @foreach($categories as $category)
+            <option value="{{ $category }}">{{ ucfirst($category) }}</option>
+        @endforeach
+    </select>
+</div>
+
                         </div>
                         <button type="submit"
                             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Submit</button>

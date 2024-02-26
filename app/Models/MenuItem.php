@@ -16,6 +16,7 @@ class MenuItem extends Model
         'description',
         'price',
         'menu_id',
+        'category',
     ];
     protected $dates = ['deleted_at'];
 

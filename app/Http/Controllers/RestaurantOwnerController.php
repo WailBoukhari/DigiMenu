@@ -37,12 +37,14 @@ class RestaurantOwnerController extends Controller
     }
 
     public function menuItemsCreate()
-    {
-        $this->authorize('createMenuItem', MenuItem::class);
+{
+    $this->authorize('createMenuItem', MenuItem::class);
 
-        $menus = auth()->user()->menus;
-        return view('restaurant_owner.menu_items.create', compact('menus'));
-    }
+    $menus = auth()->user()->menus;
+    $categories = ['pizza', 'plates', 'salads', 'drinks', 'desserts'];
+
+    return view('restaurant_owner.menu_items.create', compact('menus', 'categories'));
+}
 
     public function menuItemsStore(Request $request)
     {
@@ -53,6 +55,7 @@ class RestaurantOwnerController extends Controller
             'description' => 'required',
             'price' => 'required|numeric',
             'menu_id' => 'required',
+            'category' => 'required|in:pizza,plates,salads,drinks,desserts',
         ]);
 
         MenuItem::create($validatedData);
@@ -63,10 +66,11 @@ class RestaurantOwnerController extends Controller
     public function menuItemsEdit(MenuItem $menuItem)
     {
         $this->authorize('editMenuItem', $menuItem);
-
-        return view('restaurant_owner.menu_items.edit', compact('menuItem'));
+    
+        $categories = ['pizza', 'plates', 'salads', 'drinks', 'desserts'];
+    
+        return view('restaurant_owner.menu_items.edit', compact('menuItem', 'categories'));
     }
-
     public function menuItemsUpdate(Request $request, MenuItem $menuItem)
     {
         $this->authorize('editMenuItem', $menuItem);
@@ -75,6 +79,8 @@ class RestaurantOwnerController extends Controller
             'name' => 'required',
             'description' => 'required',
             'price' => 'required|numeric',
+            'category' => 'required|in:pizza,plates,salads,drinks,desserts',
+
         ]);
 
         $menuItem->update($validatedData);
