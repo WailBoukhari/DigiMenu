@@ -9,6 +9,18 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="bg-gray-800 shadow-xl sm:rounded-lg">
                 <div class="p-6 sm:px-20 bg-gray-800 border-b border-gray-700">
+                                   @if(session()->has('success'))
+                        <div class="bg-green-500 text-white p-4 mb-6">
+                            {{ session()->get('success') }}
+                        </div>
+                    @endif
+
+                    @if(session()->has('error'))
+                        <div class="bg-red-500 text-white p-4 mb-6">
+                            {{ session()->get('error') }}
+                        </div>
+                    @endif
+
                     <div class="text-2xl mb-8">
                         <h2 class="text-3xl font-bold text-white">Subscription Plans</h2>
                         <a href="{{ route('admin.subscription.create') }}" class="inline-block px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 mt-4">Add New Plan</a>

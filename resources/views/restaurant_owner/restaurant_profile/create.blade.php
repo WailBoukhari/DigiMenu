@@ -8,6 +8,17 @@
     <div class="py-8">
         <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-gray-900 dark:bg-gray-800 overflow-hidden shadow sm:rounded-lg">
+                                    @if(session()->has('success'))
+                        <div class="bg-green-500 text-white p-4 mb-6">
+                            {{ session()->get('success') }}
+                        </div>
+                    @endif
+
+                    @if(session()->has('error'))
+                        <div class="bg-red-500 text-white p-4 mb-6">
+                            {{ session()->get('error') }}
+                        </div>
+                    @endif
                 <div class="p-6 bg-gray-900 dark:bg-gray-800 border-b border-gray-700 dark:border-gray-600">
                     <form method="POST" action="{{ route('restaurant.profile.store') }}" enctype="multipart/form-data">
                         @csrf

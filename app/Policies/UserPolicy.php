@@ -71,7 +71,7 @@ class UserPolicy
 
     public function createMenuItem(User $user)
     {
-        return $user->hasRole('restaurant_owner');
+        return $user->hasRole('operator','restaurant_owner');
     }
 
     public function deleteMenuItem(User $user, MenuItem $menuItem)
@@ -81,7 +81,7 @@ class UserPolicy
 
     public function createMenu(User $user)
     {
-        return $user->hasRole('restaurant_owner');
+        return $user->hasRole('operator','restaurant_owner');
     }
 
     public function deleteMenu(User $user, Menu $menu)

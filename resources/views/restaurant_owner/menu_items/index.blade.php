@@ -18,6 +18,17 @@
                 </div>
             @else
                 <div class="bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                                        @if(session()->has('success'))
+                        <div class="bg-green-500 text-white p-4 mb-6">
+                            {{ session()->get('success') }}
+                        </div>
+                    @endif
+
+                    @if(session()->has('error'))
+                        <div class="bg-red-500 text-white p-4 mb-6">
+                            {{ session()->get('error') }}
+                        </div>
+                    @endif
                     <div class="p-6 bg-gray-700 border-b border-gray-600">
                         <div class="flex justify-end mb-4">
                             <!-- Add New Menu Item button -->

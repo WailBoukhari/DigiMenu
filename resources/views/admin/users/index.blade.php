@@ -31,6 +31,17 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-700 overflow-hidden shadow-xl sm:rounded-lg">
                 <div class="p-6 sm:px-20 bg-white dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
+                                        @if(session()->has('success'))
+                        <div class="bg-green-500 text-white p-4 mb-6">
+                            {{ session()->get('success') }}
+                        </div>
+                    @endif
+
+                    @if(session()->has('error'))
+                        <div class="bg-red-500 text-white p-4 mb-6">
+                            {{ session()->get('error') }}
+                        </div>
+                    @endif
                     <div class="text-2xl dark:text-white">
                         Users
                     </div>
