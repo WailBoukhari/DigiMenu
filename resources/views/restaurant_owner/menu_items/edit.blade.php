@@ -49,6 +49,16 @@
                                     class="mt-2 h-24">
                             @endif
                         </div>
+                        <div class="form-group">
+                            <label for="category">Category:</label>
+                            <select name="category" id="category" class="form-control">
+                                @foreach($categories as $category)
+                                    <option value="{{ $category }}" {{ $menuItem->category === $category ? 'selected' : '' }}>
+                                        {{ ucfirst($category) }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
 
                         <button type="submit"
                             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Update</button>

@@ -20,12 +20,21 @@
                             <input type="number" id="price" name="price" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-400 leading-tight focus:outline-none focus:shadow-outline">
                         </div>
                         <div class="mb-4">
-                            <label for="menu" class="block text-sm font-bold mb-2 text-gray-300 dark:text-gray-400">Associated Menu</label>
-                            <select id="menu" name="menu_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-400 leading-tight focus:outline-none focus:shadow-outline">
-                                @foreach ($menus as $menu)
-                                    <option value="{{ $menu->id }}">{{ $menu->name }}</option>
-                                @endforeach
-                            </select>
+                            <label for="menu" class="block text-gray-700 text-sm font-bold mb-2">Associated Menu</label>
+           <select id="menu" name="menu_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+    @foreach ($menus as $menu)
+        <option value="{{ $menu->id }}">{{ $menu->name }}</option>
+    @endforeach
+</select>
+<div class="form-group">
+    <label for="category">Category:</label>
+    <select name="category" id="category" class="form-control">
+        @foreach($categories as $category)
+            <option value="{{ $category }}">{{ ucfirst($category) }}</option>
+        @endforeach
+    </select>
+</div>
+
                         </div>
                         <div class="mb-4">
                             <label for="image" class="block text-sm font-bold mb-2 text-gray-300 dark:text-gray-400">Image</label>

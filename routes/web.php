@@ -7,9 +7,7 @@ use App\Http\Controllers\RestaurantOwnerController;
 use App\Http\Controllers\SubscriptionController;
 use App\Mail\TestEmail;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Mail;
-
-
+use App\Http\Controllers\QrCodeController;
 
 
 
@@ -63,19 +61,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::post('/remove-operator-role/{id}', [AdminController::class, 'removeOperatorRole'])->name('remove.operator.role');
     Route::post('/make-operator/{user}', [AdminController::class, 'makeOperator'])->name('make.operator');
+    Route::get('/restaurant_owner/dashboard', [RestaurantOwnerController::class, 'dashboard'])->name('restaurant_owner.dashboard');
+    Route::get('/restaurant/menus/{meniId}/qrcode', [QrCodeController::class, 'generateQrCode']);
 
-    Route::get('/admin/subscription-plans', [AdminController::class, 'indexSubscribers'])->name('admin.subscription.index');
-    Route::get('/admin/subscription-plans/create', [AdminController::class, 'createSubscribers'])->name('admin.subscription.create');
-    Route::post('/admin/subscription-plans', [AdminController::class, 'storeSubscribers'])->name('admin.subscription.store');
-    Route::get('/admin/subscription-plans/{id}/edit', [AdminController::class, 'editSubscribers'])->name('admin.subscription.edit');
-    Route::put('/admin/subscription-plans/{id}', [AdminController::class, 'updateSubscribers'])->name('admin.subscription.update');
-    Route::delete('/admin/subscription/{plan}', [AdminController::class, 'destroySubscribers'])->name('admin.subscription.destroy');
-
-    Route::get('/restaurant_owner/dashboard', [RestaurantOwnerController::class, 'dashboardOwner'])->name('restaurant_owner.dashboard');
-    Route::get('/operator/dashboard', [RestaurantOwnerController::class, 'dashboardOperator'])->name('operator.dashboard');
-    
-    Route::get('/operator/menu', [RestaurantOwnerController::class, 'menuOperatorIndex'])->name('operator.menu');
-    Route::get('/operator/menu_item', [RestaurantOwnerController::class, 'menuItemOperatorIndex'])->name('operator.menu_item');
 
 
     Route::get('/restaurant/menu', [RestaurantOwnerController::class, 'menuItemsIndex'])->name('restaurant.menu.index');
