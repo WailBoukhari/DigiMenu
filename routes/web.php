@@ -31,9 +31,6 @@ use Illuminate\Support\Facades\Mail;
 Route::get('/', function () {
     return view('home');
 });
-Route::get('/menu', function () {
-    return view('menu');
-});
 
 Route::get('/unverified', function () {
     return view('unverified');
