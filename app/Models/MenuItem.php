@@ -20,6 +20,7 @@ class MenuItem extends Model implements HasMedia
         'description',
         'price',
         'menu_id',
+        'category',
     ];
     protected $dates = ['deleted_at'];
 

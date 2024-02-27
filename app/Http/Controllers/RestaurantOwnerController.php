@@ -90,12 +90,14 @@ class RestaurantOwnerController extends Controller
 
 
     public function menuItemsCreate()
-    {
-        $this->authorize('createMenuItem', MenuItem::class);
+{
+    $this->authorize('createMenuItem', MenuItem::class);
 
-        $menus = auth()->user()->menus;
-        return view('restaurant_owner.menu_items.create', compact('menus'));
-    }
+    $menus = auth()->user()->menus;
+    $categories = ['pizza', 'plates', 'salads', 'drinks', 'desserts'];
+
+    return view('restaurant_owner.menu_items.create', compact('menus', 'categories'));
+}
 
     public function menuItemsStore(Request $request)
     {
@@ -106,39 +108,23 @@ class RestaurantOwnerController extends Controller
             'description' => 'required',
             'price' => 'required|numeric',
             'menu_id' => 'required',
-            'image' => 'required|image|max:2048', // Ensure the uploaded file is an image and not larger than 2MB
+            'category' => 'required|in:pizza,plates,salads,drinks,desserts',
         ]);
 
-        // Create new menu item
-        $menuItem = MenuItem::create([
-            'name' => $validatedData['name'],
-            'description' => $validatedData['description'],
-            'price' => $validatedData['price'],
-            'menu_id' => $validatedData['menu_id'],
-        ]);
+        MenuItem::create($validatedData);
 
-        // Handle image upload
-        if ($request->hasFile('image')) {
-            // Add the uploaded image to Spatie Media Library
-            $menuItem->addMediaFromRequest('image')
-                ->toMediaCollection('images');
-        }
-
-        // Dispatch event if needed
-        event(new MenuItemAdded($menuItem));
-
-        // Redirect with success message
-        return redirect()->route('restaurant.menu.index')->with('success', 'Menu item created successfully.');
+        return redirect()->route('restaurant.menus.index')->with('success', 'Menu item created successfully.');
     }
 
 
     public function menuItemsEdit(MenuItem $menuItem)
     {
         $this->authorize('editMenuItem', $menuItem);
-        $menus = auth()->user()->menus;
-        return view('restaurant_owner.menu_items.edit', compact('menuItem', 'menus'));
+    
+        $categories = ['pizza', 'plates', 'salads', 'drinks', 'desserts'];
+    
+        return view('restaurant_owner.menu_items.edit', compact('menuItem', 'categories'));
     }
-
     public function menuItemsUpdate(Request $request, MenuItem $menuItem)
     {
         $this->authorize('editMenuItem', $menuItem);
@@ -147,27 +133,13 @@ class RestaurantOwnerController extends Controller
             'name' => 'required',
             'description' => 'required',
             'price' => 'required|numeric',
-            'menu_id' => 'required',
-            'image' => 'image|max:2048', // Ensure the uploaded file is an image and not larger than 2MB
+            'category' => 'required|in:pizza,plates,salads,drinks,desserts',
+
         ]);
 
-        // Update menu item fields
-        $menuItem->update([
-            'name' => $validatedData['name'],
-            'description' => $validatedData['description'],
-            'price' => $validatedData['price'],
-            'menu_id' => $validatedData['menu_id'],
-        ]);
+        $menuItem->update($validatedData);
 
-        // Handle image upload
-        if ($request->hasFile('image')) {
-            // Add the uploaded image to Spatie Media Library
-            $menuItem->addMediaFromRequest('image')
-                ->toMediaCollection('images');
-        }
-
-        // Redirect with success message
-        return redirect()->route('restaurant.menu.index')->with('success', 'Menu item updated successfully.');
+        return redirect()->route('restaurant.menus.index')->with('success', 'Menu item updated successfully.');
     }
     public function menuItemsDestroy(Request $request, MenuItem $menuItem)
     {

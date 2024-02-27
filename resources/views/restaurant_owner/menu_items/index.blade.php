@@ -58,12 +58,16 @@
                                             class="px-6 py-3 bg-gray-600 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">
                                             Price
                                         </th>
-                                        <th
-                                            class="px-6 py-3 bg-gray-600 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">
+                                       
+                                        <th class="px-6 py-3 bg-gray-600 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">
                                             Menu
                                         </th>
-                                        <th
-                                            class="px-6 py-3 bg-gray-600 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">
+                                        <th class="px-6 py-3 bg-gray-600 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">
+                                           Category
+                                        </th>
+
+                                        
+                                        <th class="px-6 py-3 bg-gray-600 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">
                                             Actions
                                         </th>
                                     </tr>
@@ -79,10 +83,14 @@
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                                                 {{ $menuItem->price }}
-                                            </td>
+                                            </td> 
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                                                 {{ $menuItem->menu->name }}
                                             </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
+                                                   {{ $menuItem->category }}
+                                            </td>
+                                           
                                             <td class="px-6 py-4 whitespace-nowrap text-sm">
                                                 <!-- Edit menu button -->
                                                 <a href="{{ route('restaurant.menu.edit', $menuItem->id) }}"
