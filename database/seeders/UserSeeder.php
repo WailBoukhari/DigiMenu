@@ -9,39 +9,46 @@ use Illuminate\Database\Seeder;
 
 class UserSeeder extends Seeder
 {
-    /** 
+    /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        // User::factory()->count(10)->create();
+        // Create regular users
+        User::factory()->count(3)->create();
 
+        // Retrieve all subscription plans
         $plans = SubscriptionPlan::all();
 
-        // Create 10 restaurant_owner users with associated restaurants and subscription plans
-        User::factory()->count(10)->create()->each(function ($user) use ($plans) {
-            // Get a random subscription plan
+        // Create restaurant owners
+        User::factory()->count(3)->create()->each(function ($owner) use ($plans) {
+            // Assign a random subscription plan
             $plan = $plans->random();
+            $owner->subscriptionPlan()->associate($plan);
 
-            // Assign the role of restaurant owner to the user
-            $user->assignRole('restaurant_owner');
+            // Assign the restaurant owner role
+            $owner->assignRole('restaurant_owner');
 
-            // Create a restaurant for the user
-            $restaurant = Restaurant::factory()->create(['owner_id' => $user->id]);
+            // Create and associate a restaurant with the owner
+            $restaurant = Restaurant::factory()->create(['owner_id' => $owner->id]);
+            $owner->restaurants()->save($restaurant);
 
-            // Associate the restaurant with the user
-            $user->restaurants()->save($restaurant);
+            // Update owner's email
+            $owner->email = str_replace(' ', '', $owner->name) . '@owner.com';
+            $owner->save();
 
-            // Associate the subscription plan with the user
-            $user->subscriptionPlan()->associate($plan);
-            $user->save();
+            // Create operators associated with this owner's restaurant
+            User::factory()->count(1)->create()->each(function ($operator) use ($restaurant) {
+                // Assign the operator role
+                $operator->assignRole('operator');
+
+                // Associate the operator with the restaurant
+                $operator->restaurants()->attach($restaurant);
+
+                // Update operator's email
+                $operator->email = str_replace(' ', '', $operator->name) . '@operator.com';
+                $operator->save();
+            });
         });
-
-        // User::factory()->count(10)->create()->each(function ($user) {
-        //     $restaurant = Restaurant::factory()->create(['owner_id' => $user->id]);
-        //     $user->assignRole('operator');
-        //     $user->restaurants()->save($restaurant);
-        // });
     }
 }
-  

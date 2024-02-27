@@ -38,20 +38,21 @@ class AuthenticatedSessionController extends Controller
 
             // Check the user's role and redirect accordingly
             if ($user->hasRole('admin')) {
-                return redirect()->route('admin.users.index');
+                return redirect()->route('admin.dashboard');
             } elseif ($user->hasRole('restaurant_owner')) {
                 return redirect()->route('restaurant_owner.dashboard');
             } elseif ($user->hasRole('operator')) {
-                return redirect()->route('admin.operators.index');
+                return redirect()->route('operator.dashboard');
             } else {
-                return redirect()->intended(RouteServiceProvider::HOME);
+                // If the user has no defined role, redirect to the default dashboard
+                return redirect()->route('user.dashboard');
             }
         }
 
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
         ]);
-    }   
+    } 
 
     /**
      * Destroy an authenticated session.

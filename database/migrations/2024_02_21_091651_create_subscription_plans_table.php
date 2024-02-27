@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('name');
             $table->text('description');
             $table->decimal('price', 8, 2);
-            $table->integer('create_limit')->nullable();
             $table->integer('scan_limit')->nullable();
             $table->integer('dish_creation_limit')->nullable();
             $table->timestamps();

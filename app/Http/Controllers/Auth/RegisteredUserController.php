@@ -6,10 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
@@ -44,16 +46,15 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-        ]);
 
-        // Assign the role of "restaurant owner" to the user
+        ]);
+        event(new Registered($user));
+
         $role = Role::findByName('restaurant_owner');
         $user->assignRole($role);
 
-        // Dispatch the Registered event
         event(new Registered($user));
 
-        // Log in the user
         Auth::login($user);
 
         return redirect()->route('subscription.form');
