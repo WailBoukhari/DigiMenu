@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('contact_number');
             $table->text('description')->nullable();
             $table->foreignId('owner_id')->nullable()->constrained('users')->onDelete('set null');
+            $table->string('qr_code_path')->nullable()->after('description');
+            $table->unsignedInteger('max_scan_limit')->default(1)->after('slug')->comment('Maximum scan limit for the restaurant');
             $table->timestamps();
         });
     }

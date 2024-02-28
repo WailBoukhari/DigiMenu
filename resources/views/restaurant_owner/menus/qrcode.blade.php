@@ -10,9 +10,7 @@
     <h1>Menu QR Code</h1>
 
     {{-- Debugging statement for image URL --}}
-    <?php echo "Image URL: " . asset('qr_codes/menu_' . $menuId . '.svg'); ?>
 
-    <img src="{{ asset('qr_codes/menu_' . $menuId . '.svg') }}" alt="Menu QR Code">
     
 </body>
 </html>

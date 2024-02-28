@@ -61,8 +61,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::post('/remove-operator-role/{id}', [AdminController::class, 'removeOperatorRole'])->name('remove.operator.role');
     Route::post('/make-operator/{user}', [AdminController::class, 'makeOperator'])->name('make.operator');
-    Route::get('/restaurant_owner/dashboard', [RestaurantOwnerController::class, 'dashboard'])->name('restaurant_owner.dashboard');
-    Route::get('/restaurant/menus/{meniId}/qrcode', [QrCodeController::class, 'generateQrCode']);
+    Route::get('/restaurant_owner/dashboard', [RestaurantOwnerController::class, 'dashboardOwner'])->name('restaurant_owner.dashboard');
+    Route::get('/restaurant/menus/{meniId}/qrcode', [QrCodeController::class, 'generateQrCode'])->name('restaurant_owner.QrCode');
 
 
 
@@ -82,7 +82,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/restaurant/profile', [RestaurantOwnerController::class, 'restaurantProfile'])->name('restaurant.profile');
     Route::get('/restaurant/profile/edit', [RestaurantOwnerController::class, 'restaurantEdit'])->name('restaurant.profile.edit');
-    Route::put('/restaurant/profile/update/{restaurant}', [RestaurantOwnerController::class, 'restaurantUpdate'])->name('restaurant.profile.update');
+    Route::put('/restaurant/profile//update/', [RestaurantOwnerController::class, 'restaurantUpdate'])->name('restaurant.profile.update');
     Route::get('/restaurant/profile/create', [RestaurantOwnerController::class, 'restaurantCreate'])->name('restaurant.profile.create');
     Route::post('/restaurant/profile/store', [RestaurantOwnerController::class, 'restaurantStore'])->name('restaurant.profile.store');
 
@@ -95,8 +95,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 
 // social login routes
-Route::get('/auth/google', [AuthenticatedSessionController::class, 'redirectToGoogle'])->name('auth.google');
-Route::get('/auth/google/callback', [AuthenticatedSessionController::class, 'handleGoogleCallback']);
+Route::get('/redirect/google', [AuthenticatedSessionController::class, 'redirectToGoogle'])->name('google.redirect');
+Route::get('/auth/google/callback', [AuthenticatedSessionController::class, 'handleGoogleCallback'])->name('google.callback');
+
 
 
 

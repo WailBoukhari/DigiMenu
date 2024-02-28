@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-2xl text-gray-300 leading-tight">
-            {{ __('User Menus') }}
+            {{ __('Menus') }}
         </h2>
     </x-slot>
 
@@ -9,8 +9,7 @@
         <div class="mx-auto container">
             @if ($subscriptionExpired)
                 <!-- Subscription expired message -->
-                <div class="bg-red-600 border border-red-800 text-red-100 px-4 py-3 rounded relative mb-4"
-                    role="alert">
+                <div class="bg-red-600 border border-red-800 text-red-100 px-4 py-3 rounded relative mb-4" role="alert">
                     <strong class="font-bold">Your subscription has expired!</strong>
                     <span class="block sm:inline">Please renew your subscription to continue.</span>
                     <!-- Renewal button -->
@@ -20,13 +19,13 @@
                 </div>
             @else
                 <div class="bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                                        @if(session()->has('success'))
+                    @if (session()->has('success'))
                         <div class="bg-green-500 text-white p-4 mb-6">
                             {{ session()->get('success') }}
                         </div>
                     @endif
 
-                    @if(session()->has('error'))
+                    @if (session()->has('error'))
                         <div class="bg-red-500 text-white p-4 mb-6">
                             {{ session()->get('error') }}
                         </div>
@@ -42,10 +41,12 @@
                             <table class="w-full">
                                 <thead>
                                     <tr>
-                                        <th class="px-6 py-3 bg-gray-600 text-left text-sm font-medium text-gray-300 uppercase">
+                                        <th
+                                            class="px-6 py-3 bg-gray-600 text-left text-sm font-medium text-gray-300 uppercase">
                                             Menu Name
                                         </th>
-                                        <th class="px-6 py-3 bg-gray-600 text-left text-sm font-medium text-gray-300 uppercase">
+                                        <th
+                                            class="px-6 py-3 bg-gray-600 text-left text-sm font-medium text-gray-300 uppercase">
                                             Actions
                                         </th>
                                     </tr>
